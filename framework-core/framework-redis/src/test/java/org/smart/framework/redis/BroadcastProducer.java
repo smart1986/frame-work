@@ -1,4 +1,4 @@
-//package org.jerry.framework.redis;
+//package org.smart.framework.redis;
 //
 //import org.apache.rocketmq.client.producer.DefaultMQProducer;
 //import org.apache.rocketmq.client.producer.SendResult;

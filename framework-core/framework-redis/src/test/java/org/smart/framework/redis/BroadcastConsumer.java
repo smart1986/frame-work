@@ -1,4 +1,4 @@
-//package org.jerry.framework.redis;
+//package org.smart.framework.redis;
 //
 //import java.util.List;
 //import java.util.concurrent.TimeUnit;

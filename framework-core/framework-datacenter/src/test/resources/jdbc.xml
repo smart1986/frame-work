@@ -21,7 +21,7 @@
 	
 	<bean id="jdbcTemplate" class="org.smart.framework.datacenter.BaseJdbcTemplate">
 		<property name="dataSource" ref="dataSource"></property>
-		<property name="packageScan" value="org.jerry.framework.datacenter.entity"></property>
+		<property name="packageScan" value="org.smart.framework.datacenter.entity"></property>
 	</bean>
 	<bean id="dbQueue" class="org.smart.framework.datacenter.BaseDBQueueImpl">
 	</bean>

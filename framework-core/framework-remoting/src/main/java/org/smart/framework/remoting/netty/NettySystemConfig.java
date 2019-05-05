@@ -2,15 +2,15 @@ package org.smart.framework.remoting.netty;
 
 public class NettySystemConfig {
     public static final String COM_ROCKETMQ_REMOTING_NETTY_POOLED_BYTE_BUF_ALLOCATOR_ENABLE =
-        "org.jerry.framework.remoting.nettyPooledByteBufAllocatorEnable";
+        "org.smart.framework.remoting.nettyPooledByteBufAllocatorEnable";
     public static final String COM_ROCKETMQ_REMOTING_SOCKET_SNDBUF_SIZE =
-        "org.jerry.framework.remoting.socket.sndbuf.size";
+        "org.smart.framework.remoting.socket.sndbuf.size";
     public static final String COM_ROCKETMQ_REMOTING_SOCKET_RCVBUF_SIZE =
-        "org.jerry.framework.remoting.socket.rcvbuf.size";
+        "org.smart.framework.remoting.socket.rcvbuf.size";
     public static final String COM_ROCKETMQ_REMOTING_CLIENT_ASYNC_SEMAPHORE_VALUE =
-        "org.jerry.framework.remoting.clientAsyncSemaphoreValue";
+        "org.smart.framework.remoting.clientAsyncSemaphoreValue";
     public static final String COM_ROCKETMQ_REMOTING_CLIENT_ONEWAY_SEMAPHORE_VALUE =
-        "org.jerry.framework.remoting.clientOnewaySemaphoreValue";
+        "org.smart.framework.remoting.clientOnewaySemaphoreValue";
 
     public static final boolean NETTY_POOLED_BYTE_BUF_ALLOCATOR_ENABLE = //
         Boolean.parseBoolean(System.getProperty(COM_ROCKETMQ_REMOTING_NETTY_POOLED_BYTE_BUF_ALLOCATOR_ENABLE, "false"));

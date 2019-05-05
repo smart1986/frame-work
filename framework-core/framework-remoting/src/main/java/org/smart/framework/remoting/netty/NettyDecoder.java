@@ -17,7 +17,7 @@ public class NettyDecoder extends LengthFieldBasedFrameDecoder{
 	private static final Logger log = LoggerFactory.getLogger(NettyDecoder.class);
 
     private static final int FRAME_MAX_LENGTH =
-        Integer.parseInt(System.getProperty("org.jerry.framework.remoting.frameMaxLength", "16777216"));
+        Integer.parseInt(System.getProperty("org.smart.framework.remoting.frameMaxLength", "16777216"));
 
     public NettyDecoder() {
         super(FRAME_MAX_LENGTH, 0, 4, 0, 4);
