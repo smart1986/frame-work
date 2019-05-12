@@ -27,13 +27,13 @@ public class RouterHandler {
 	/**
 	 * 方法映射列表
 	 */
-	private Map<Byte, Method> METHOD_MAPS = new HashMap<Byte, Method>();
+	private Map<Integer, Method> METHOD_MAPS = new HashMap<>();
 
 	/**
 	 * 命令映射列表
 	 */
-	private Map<Byte, Cmd> CMD_MAPS = new HashMap<Byte, Cmd>();
-	private Map<Byte, Object> CMD_PARSE_MAPS = new HashMap<Byte, Object>();
+	private Map<Integer, Cmd> CMD_MAPS = new HashMap<>();
+	private Map<Integer, Object> CMD_PARSE_MAPS = new HashMap<>();
 	
 	private MethodAccess methodAccess;
 	public RouterHandler(Object hander) {
@@ -47,7 +47,7 @@ public class RouterHandler {
 	 * @param cmd
 	 * @return
 	 */
-	public Method getMethod(byte cmd) {
+	public Method getMethod(int cmd) {
 		return METHOD_MAPS.get(cmd);
 	}
 
@@ -56,10 +56,10 @@ public class RouterHandler {
 	 * @param cmd
 	 * @return
 	 */
-	public Cmd getCmd(byte cmd) {
+	public Cmd getCmd(int cmd) {
 		return CMD_MAPS.get(cmd);
 	}
-	public Object getParser(byte cmd) {
+	public Object getParser(int cmd) {
 		return CMD_PARSE_MAPS.get(cmd);
 	}
 	

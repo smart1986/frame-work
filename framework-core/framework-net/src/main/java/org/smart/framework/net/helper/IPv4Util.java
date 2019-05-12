@@ -1,6 +1,9 @@
 package org.smart.framework.net.helper;
 
+import io.netty.channel.Channel;
+
 import java.net.InetAddress;
+import java.net.SocketAddress;
 
 public class IPv4Util {
 
@@ -182,6 +185,37 @@ public class IPv4Util {
 		int[] ipIntArr = IPv4Util.getIPIntScope(ipAddr, mask);
 		return new String[] { IPv4Util.intToIp(ipIntArr[0]), IPv4Util.intToIp(ipIntArr[0]) };
 	}
+
+	public static String parseChannelRemoteAddr(final Channel channel) {
+		if (null == channel) {
+			return "";
+		}
+		SocketAddress remote = channel.remoteAddress();
+		final String  addr   = remote != null ? remote.toString() : "";
+
+		if (addr.length() > 0) {
+			int index = addr.lastIndexOf("/");
+			if (index >= 0) {
+				return addr.substring(index + 1);
+			}
+
+			return addr;
+		}
+
+		return "";
+	}
+
+	public static String parseSocketAddressAddr(SocketAddress socketAddress) {
+		if (socketAddress != null) {
+			final String addr = socketAddress.toString();
+
+			if (addr.length() > 0) {
+				return addr.substring(1);
+			}
+		}
+		return "";
+	}
+
 
 	/**
 	 * @param args

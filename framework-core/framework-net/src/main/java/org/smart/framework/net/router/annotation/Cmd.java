@@ -19,7 +19,7 @@ public @interface Cmd {
 	 * 命令id(该模块内唯一)
 	 * @return
 	 */
-	public byte id();
+	public int id();
 	
 	/**
 	 * 验证.默认true

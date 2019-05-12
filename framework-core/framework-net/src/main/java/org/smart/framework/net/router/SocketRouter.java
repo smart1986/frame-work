@@ -21,7 +21,7 @@ public abstract class SocketRouter implements Router<DataPacket> {
 	/**
 	 * 模块id与模块句柄 关联列表
 	 */
-	protected Map<Byte, RouterHandler> MODULE_MAPS = new HashMap<Byte, RouterHandler>();
+	protected Map<Integer, RouterHandler> MODULE_MAPS = new HashMap<>();
 	
 	/**
 	 * 注册模块
@@ -32,7 +32,7 @@ public abstract class SocketRouter implements Router<DataPacket> {
 		if (handler != null && handler instanceof RouterHandler) {
 			RouterHandler routerHandler = (RouterHandler) handler;
 			Module m = routerHandler.getHander().getClass().getAnnotation(Module.class);
-			byte module = m.id();
+			int module = m.id();
 			if (MODULE_MAPS.containsKey(module)) {
 				throw new RuntimeException(String.format("module:[%d] duplicated key", module));
 			}
@@ -44,8 +44,6 @@ public abstract class SocketRouter implements Router<DataPacket> {
 	
 	/**
 	 * 转发数据验证
-	 * @param session
-	 * @param dataPacket
 	 * @return
 	 */
 	@Override
@@ -54,14 +52,14 @@ public abstract class SocketRouter implements Router<DataPacket> {
 			return false;
 		}
 
-		byte module = dataPacket.getModule();
+		int module = dataPacket.getModule();
 		if (!MODULE_MAPS.containsKey(module)) {
 			LOGGER.warn("module:{} does not exist!", module);
 			return false;
 		}
 
 		RouterHandler handler = MODULE_MAPS.get(module);
-		byte cmd = dataPacket.getCmd();
+		int cmd = dataPacket.getCmd();
 		Method method = handler.getMethod(cmd);
 		if (method == null) {
 			LOGGER.warn("module:{},cmd:{} does not exist!",module, cmd);
@@ -72,8 +70,6 @@ public abstract class SocketRouter implements Router<DataPacket> {
 	
 	/**
 	 * 路由转发
-	 * @param ioSession  当前session
-	 * @param msgPacket  消息包
 	 */
 	@Override
 	public abstract Object forward(ChannelHandlerContext ctx, DataPacket dataPacket);
