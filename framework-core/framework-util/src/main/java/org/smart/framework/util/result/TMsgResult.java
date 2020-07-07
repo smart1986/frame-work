@@ -3,7 +3,7 @@ package org.smart.framework.util.result;
 import com.alibaba.fastjson.annotation.JSONField;
 /**
  * 带字符串信息的结果集
- * @author jerry
+ * @author smart
  *
  * @param <T>
  */

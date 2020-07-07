@@ -18,7 +18,7 @@ import org.springframework.util.SystemPropertyUtils;
 /**
  * 序列化对象转换类
  * 
- * @author ludd
+ * @author smart
  * 
  */
 public class PackageScanner {

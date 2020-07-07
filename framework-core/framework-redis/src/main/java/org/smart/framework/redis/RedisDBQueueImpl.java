@@ -59,7 +59,7 @@ public class RedisDBQueueImpl implements DBQueue {
                     if (o == null) {
                         break;
                     }
-                    System.out.println(o);
+                    //System.out.println(o);
                 }
             }
         });

@@ -9,5 +9,5 @@ public interface IMutiKeyConfigBean extends IConfigBean{
 	 * 缓存key列表
 	 * @return
 	 */
-	public List<IdentiyKey> findCacheKeys();
+	List<IdentiyKey> findCacheKeys();
 }

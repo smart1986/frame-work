@@ -22,7 +22,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 /**
  * 转发器实现
- * @author jerry
+ * @author smart
  *
  */
 public class ForwardSocketRouterImpl extends SocketRouter {

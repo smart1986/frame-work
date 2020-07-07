@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * db字段标注
- * @author ludd
+ * @author smart
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -16,19 +16,16 @@ public @interface Column {
 
 	/**
 	 * 是否为主键。默认为false
-	 * @return
 	 */
-	public boolean pk() default false;
+	boolean pk() default false;
 	/**
 	 * 是否为外键
-	 * @return
 	 */
-	public boolean fk() default false;
+	boolean fk() default false;
 	
 	/**
 	 * 字段别名
-	 * @return
 	 */
-	public String alias() default "";
+	String alias() default "";
 
 }

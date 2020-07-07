@@ -20,9 +20,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * 一对一数据库实体
  * 
- * @author ludd
- *
- * @param
+ * @author smart
  */
 public abstract class Entity implements RowMapper<Entity> {
 	protected Logger LOGGER = LoggerFactory.getLogger(getClass());

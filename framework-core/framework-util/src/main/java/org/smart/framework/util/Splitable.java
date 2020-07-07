@@ -2,7 +2,7 @@ package org.smart.framework.util;
 
 /**
  * 各种分隔符
- * @author ludd
+ * @author smart
  *
  */
 public interface Splitable {

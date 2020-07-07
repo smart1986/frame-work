@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * uuid生成类
  * 
- * @author ludd
+ * @author smart
  *
  */
 public class UUIDUtils {

@@ -2,7 +2,7 @@ package org.smart.framework.util;
 
 /**
  * 
- * @author ludd
+ * @author smart
  *
  * @param <T>
  */

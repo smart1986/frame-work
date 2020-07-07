@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 有队列和Map的对象
- * @author ludd
+ * @author smart
  * @param <K>
  * @param <V>
  */

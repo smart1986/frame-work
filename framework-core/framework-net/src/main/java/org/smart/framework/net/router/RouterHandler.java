@@ -16,7 +16,7 @@ import com.esotericsoftware.reflectasm.MethodAccess;
 /**
  * 模块处理句柄接口
  * 
- * @author ludd
+ * @author smart
  * 
  */
 public class RouterHandler {

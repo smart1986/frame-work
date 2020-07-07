@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.FullHttpRequest;
 
-/**
- * Created by mx on 2017/6/2.
- */
+
 public abstract class HttpRouter implements Router<FullHttpRequest> {
     protected static final Logger LOGGER = LoggerFactory.getLogger(HttpRouter.class);
     protected Map<String,Method> mathodMap = new HashMap<>();

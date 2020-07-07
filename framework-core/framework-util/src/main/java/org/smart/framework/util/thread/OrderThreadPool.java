@@ -22,7 +22,7 @@ import com.google.common.collect.Lists;
 
 /**
  * 同一属性任务在同一个线程中执行
- * @author jerry
+ * @author smart
  *
  */
 public class OrderThreadPool implements ExecutorService {

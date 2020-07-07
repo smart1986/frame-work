@@ -1,7 +1,7 @@
 package org.smart.framework.util.common;
 /**
  * spring bean 装配完成后执行
- * @author jerry
+ * @author smart
  *
  */
 public interface GameInit {

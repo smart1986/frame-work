@@ -4,7 +4,7 @@ package org.smart.framework.datacenter.statement;
 
 /**
  * 查询sql语句实现
- * @author ludd
+ * @author smart
  *
  */
 public class SelectStatement extends Statement {

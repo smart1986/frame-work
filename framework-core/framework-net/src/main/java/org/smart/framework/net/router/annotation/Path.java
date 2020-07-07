@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 命令注解，用于标识接收消息的方法
  * {@see ModuleHandler}
- * @author ludd
+ * @author smart
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -19,12 +19,12 @@ public @interface Path {
 	 * 命令id(该模块内唯一)
 	 * @return
 	 */
-	public String value();
+	String value();
 	
 	/**
 	 * 验证.默认true
 	 * @return
 	 */
-	public boolean check() default true;
+	boolean check() default true;
 	
 }

@@ -8,7 +8,7 @@ import org.smart.framework.util.sign.Caesar;
 
 /**
  * 根据序列号生成加密不重复id
- * @author jerry
+ * @author smart
  *
  */
 public class FixLenUUID {

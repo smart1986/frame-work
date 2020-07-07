@@ -2,7 +2,7 @@ package org.smart.framework.util;
 
 /**
  * 时间点定义
- * @author ludd
+ * @author smart
  *
  */
 public abstract interface TimeConstant {

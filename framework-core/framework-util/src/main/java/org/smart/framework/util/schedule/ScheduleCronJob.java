@@ -14,7 +14,7 @@ import org.springframework.scheduling.support.CronTrigger;
 
 /**
  * 表达式时间调度
- * @author jerry
+ * @author smart
  *
  */
 public abstract class ScheduleCronJob implements ScheduleJob {

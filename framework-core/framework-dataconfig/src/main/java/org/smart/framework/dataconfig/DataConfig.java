@@ -9,7 +9,7 @@ import org.smart.framework.util.IdentiyKey;
 
 /**
  * 数据配置接口 
- * @author ludd
+ * @author smart
  *
  */
 public interface DataConfig {
@@ -17,10 +17,9 @@ public interface DataConfig {
 	/**
 	 * 初始化配置数据
 	 */
-	public void initModelAdapterList() throws Exception;
+	void initModelAdapterList() throws Exception;
 	/**
 	 * 根据类名获取数据配置列表
-	 * @param invokeClazz	调用者的Service类
 	 * @param modelClass	需要获取的Model类
 	 * @return
 	 */
@@ -36,7 +35,6 @@ public interface DataConfig {
 	/**
 	 * 重载配置文件
 	 * @param fileName	文件名
-	 * @param newData	新的文件流
 	 * @return
 	 */
 	boolean reload(String fileName, URL url) throws Exception;

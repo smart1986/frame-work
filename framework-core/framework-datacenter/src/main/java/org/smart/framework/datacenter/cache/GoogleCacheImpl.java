@@ -13,6 +13,10 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+/**
+ * googlecache 框架内实现
+ * @param <T>
+ */
 public class GoogleCacheImpl<T> implements DataCache<T> {
 
 	protected Logger LOGGER = LoggerFactory.getLogger(getClass());

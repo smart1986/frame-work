@@ -3,7 +3,7 @@ package org.smart.framework.datacenter.statement;
 
 /**
  * Replace into ON DUPLICATE KEY UPDATE sql语句实现
- * @author ludd
+ * @author smart
  *
  */
 public class InsertUpdateStatement extends Statement {

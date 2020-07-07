@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 随机工具类
  * 
- * @author jerry
+ * @author smart
  *
  */
 public class RandomUtils {

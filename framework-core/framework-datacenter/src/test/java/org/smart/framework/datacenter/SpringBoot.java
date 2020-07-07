@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 /**
  * spring 启动完成 开始执行业务
  *
- * @author jerry
+ * @author smart
  */
 @Component
 public class SpringBoot implements ApplicationListener<ContextRefreshedEvent> {

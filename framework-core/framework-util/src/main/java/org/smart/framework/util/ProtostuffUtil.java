@@ -6,7 +6,7 @@ import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
 /**
  * 序列化反序列化工具
- * @author 卢德迪
+ * @author smart
  *
  */
 public class ProtostuffUtil {

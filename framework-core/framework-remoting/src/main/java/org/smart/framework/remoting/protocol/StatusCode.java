@@ -3,7 +3,7 @@ package org.smart.framework.remoting.protocol;
 /**
  * 响应消息的状态码
  * 
- * @author ludd
+ * @author smart
  * 
  */
 public interface StatusCode {

@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * 数据配置标注
- * @author ludd
+ * @author smart
  *
  */
 @Target({ ElementType.TYPE })

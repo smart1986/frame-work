@@ -20,7 +20,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
  * 第三步：游戏业务初始化
  * 第四步：时间调度相关初始化
  * 第五步：网络初始化
- * @author jerry
+ * @author smart
  *
  */
 public class BaseBoot implements ApplicationListener<ContextRefreshedEvent> {

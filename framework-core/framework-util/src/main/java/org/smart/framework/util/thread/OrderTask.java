@@ -1,7 +1,7 @@
 package org.smart.framework.util.thread;
 /**
  * 带特定属性任务
- * @author jerry
+ * @author smart
  *
  */
 public interface OrderTask extends Runnable {

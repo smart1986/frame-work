@@ -14,7 +14,7 @@ import org.springframework.scheduling.support.CronTrigger;
 
 /**
  * spring调度封装
- * @author ludd
+ * @author smart
  *
  */
 public class Schedule {

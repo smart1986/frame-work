@@ -5,15 +5,13 @@ import java.util.List;
 
 /**
  * 更新语句实现
- * @author ludd
+ * @author smart
  *
  */
 public class UpdateStatement extends Statement {
 
 	/**
 	 * 构造
-	 * @param entity
-	 * @param conditon 条件列名
 	 */
 	public UpdateStatement() {
 		super();

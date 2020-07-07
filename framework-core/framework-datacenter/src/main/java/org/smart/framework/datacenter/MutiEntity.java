@@ -1,7 +1,7 @@
 package org.smart.framework.datacenter;
 /**
  * 一对多数据库实体
- * @author jerry
+ * @author smart
  *
  * @param <FK>
  */

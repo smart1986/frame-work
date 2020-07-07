@@ -27,7 +27,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 /**
  * 
- * @author 卢德迪
+ * @author smart
  *
  * @param <T>
  *            请求参数类型

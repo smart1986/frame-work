@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 字符串工具类
  * 
- * @author ludd
+ * @author smart
  *
  */
 public class StringUtils {

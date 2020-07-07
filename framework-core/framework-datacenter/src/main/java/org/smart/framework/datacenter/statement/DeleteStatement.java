@@ -3,9 +3,8 @@ package org.smart.framework.datacenter.statement;
 
 /**
  * 删除sql语句实现
- * @author ludd
+ * @author smart
  *
- * @param <T>
  */
 public class DeleteStatement extends Statement {
 	

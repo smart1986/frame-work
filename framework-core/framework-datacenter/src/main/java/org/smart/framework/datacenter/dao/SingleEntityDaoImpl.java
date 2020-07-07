@@ -12,7 +12,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 /**
  * 一对一dao基类
- * @author jerry
+ * @author smart
  *
  */
 public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends DefaultDao<T>{
@@ -40,9 +40,6 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 
 	/**
 	 * 从缓存获取实体
-	 * @param actorId
-	 * @param clz
-	 * @return
 	 */
 	protected T getFromCache(final Object key) {
 		return  dataCache.getFromCache(key);
@@ -50,7 +47,6 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	/**
 	 * 通过非主键key查找
 	 * @param key
-	 * @return
 	 */
 	protected T getFromCacheWithCacheOtherKey(final IdentiyKey key) {
 		Object mKey = getMapping(key);
@@ -67,8 +63,6 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	/**
 	 * 获取实体
 	 * @param actorId
-	 * @param clz
-	 * @return
 	 */
 	public T get(IdentiyKey actorId) {
 		return get(actorId, true);
@@ -76,7 +70,6 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	/**
 	 * 获取实体
 	 * @param actorId
-	 * @param clz
 	 * @return
 	 */
 	public  T get(IdentiyKey actorId, boolean pk) {
@@ -130,9 +123,6 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	
 	/**
 	 * 从数据库加载
-	 * 
-	 * @param condition
-	 * @param clz
 	 * @return
 	 */
 	protected T loadFromDB(IdentiyKey key) {

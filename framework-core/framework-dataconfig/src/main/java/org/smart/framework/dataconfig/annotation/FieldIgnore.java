@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * 忽略自定义的字段
- * @author ludd
+ * @author smart
  *
  */
 @Retention(RetentionPolicy.RUNTIME)

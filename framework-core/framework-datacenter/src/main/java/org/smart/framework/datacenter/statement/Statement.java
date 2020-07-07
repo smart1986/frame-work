@@ -3,9 +3,7 @@ package org.smart.framework.datacenter.statement;
 
 /**
  * SQL语句基类
- * @author ludd
- *
- * @param <T>
+ * @author smart
  */
 public abstract class Statement {
 	protected static final String PLACEHOLDER = " ? ";

@@ -26,9 +26,9 @@ import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.google.common.collect.Lists;
 
 /**
- * jdbc实现类，通过jdbc.xml注入
+ * jdbc自定义类
  * 
- * @author ludd
+ * @author smart
  *
  */
 public class BaseJdbcTemplate extends JdbcTemplate {

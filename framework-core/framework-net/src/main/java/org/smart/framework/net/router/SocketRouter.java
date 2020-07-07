@@ -13,7 +13,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 /**
  * 消息路由
- * @author jerry
+ * @author smart
  *
  */
 public abstract class SocketRouter implements Router<DataPacket> {

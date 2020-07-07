@@ -8,7 +8,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 /**
  * 多值主键
  * 
- * @author jerry
+ * @author smart
  *
  */
 public class IdentiyKey {

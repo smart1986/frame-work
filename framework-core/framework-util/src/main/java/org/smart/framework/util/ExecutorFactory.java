@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * @see Executors
- * @author jerry
+ * @author smart
  *
  */
 public class ExecutorFactory {

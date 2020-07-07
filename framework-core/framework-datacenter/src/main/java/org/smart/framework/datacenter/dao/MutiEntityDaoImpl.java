@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 /**
  * 一对多dao基类
  * 
- * @author jerry
+ * @author smart
  *
  */
 public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends DefaultDao<Map<IdentiyKey, T>> {

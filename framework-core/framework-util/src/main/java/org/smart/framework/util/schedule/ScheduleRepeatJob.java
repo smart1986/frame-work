@@ -9,7 +9,7 @@ import org.springframework.scheduling.TaskScheduler;
 
 /**
  * 一定频率时间调度
- * @author jerry
+ * @author smart
  *
  */
 public abstract class ScheduleRepeatJob implements ScheduleJob {

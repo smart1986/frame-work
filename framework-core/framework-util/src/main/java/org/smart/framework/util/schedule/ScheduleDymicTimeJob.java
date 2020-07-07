@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 /**
  * 动态时间调度
- * @author jerry
+ * @author smart
  *
  */
 public abstract class ScheduleDymicTimeJob implements ScheduleJob {

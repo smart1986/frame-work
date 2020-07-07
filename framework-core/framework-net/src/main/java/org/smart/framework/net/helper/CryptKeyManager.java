@@ -5,7 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.smart.framework.util.SecurityUtils;
 /**
  * 加密key管理器
- * @author jerry
+ * @author smart
  *
  */
 public class CryptKeyManager {

@@ -19,7 +19,7 @@ import com.esotericsoftware.reflectasm.ConstructorAccess;
 
 /**
  * 实体信息类,用于记录反射后的一些常用信息
- * @author ludd
+ * @author smart
  *
  */
 public class EntityInfo {

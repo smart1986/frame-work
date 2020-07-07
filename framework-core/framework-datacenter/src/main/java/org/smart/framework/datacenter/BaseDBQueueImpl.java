@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 /**
  * 队列入库实现
- * @author jerry
+ * @author smart
  *
  */
 public class BaseDBQueueImpl implements DBQueue {

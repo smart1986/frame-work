@@ -21,9 +21,6 @@ public class RequestParser {
     /**
      * 解析请求参数
      * @return 包含所有请求参数的键值对, 如果没有参数, 则返回空Map
-     *
-     * @throws BaseCheckedException
-     * @throws IOException
      */
     public static  Map<String, Object> parse(FullHttpRequest fullReq) throws  IOException {
         HttpMethod method = fullReq.method();

@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * 数据配置接口功能实现
- * @author ludd
+ * @author smart
  *
  */
 public class DataConfigImpl implements DataConfig {

@@ -2,7 +2,7 @@ package org.smart.framework.datacenter.annotation;
 
 /**
  * 队列类型
- * @author ludd
+ * @author smart
  *
  */
 public enum DBQueueType {
@@ -18,5 +18,5 @@ public enum DBQueueType {
 	/**
 	 * 普通实体（用于1对多的表结构, 主键是自增的表）
 	 */
-	DEFAULT;
+	DEFAULT 
 }

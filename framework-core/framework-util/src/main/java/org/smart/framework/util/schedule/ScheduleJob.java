@@ -1,7 +1,7 @@
 package org.smart.framework.util.schedule;
 /**
  * 调度接口
- * @author jerry
+ * @author smart
  *
  */
 public interface ScheduleJob extends Runnable {

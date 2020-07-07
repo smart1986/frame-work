@@ -4,14 +4,14 @@ import java.util.Collection;
 
 /**
  * 入库队列接口
- * @author ludd
+ * @author smart
  *
  */
 public interface DBQueue {
 	/**
 	 * 初始化
 	 */
-	public void initialize();
+	void initialize();
 	/**
 	 * 数据更新队列
 	 * @param entity
@@ -41,18 +41,18 @@ public interface DBQueue {
 	 * 获取任务队列任务数
 	 * @return
 	 */
-	public int getTaskSize();
+	int getTaskSize();
 	/**
 	 * 获取未保存的普通实体数
 	 * @return
 	 */
-	public int getNormalEntitySize();
+	 int getNormalEntitySize();
 	
 	/**
 	 * 获得角色未保存个数
 	 * @return
 	 */
-	public int getActorSize();
+	int getActorSize();
 
 	/**
 	 * 提交队列

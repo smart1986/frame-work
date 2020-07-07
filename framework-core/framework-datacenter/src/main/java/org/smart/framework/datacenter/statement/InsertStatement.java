@@ -2,7 +2,7 @@ package org.smart.framework.datacenter.statement;
 
 /**
  * 插入sql语句实现
- * @author ludd
+ * @author smart
  *
  */
 public class InsertStatement extends Statement {

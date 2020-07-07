@@ -8,7 +8,7 @@ import org.smart.framework.dataconfig.IConfigBean;
 /**
  * 数据解析接口
  * 
- * @author ludd
+ * @author smart
  * 
  */
 public interface DataParser {
@@ -20,5 +20,5 @@ public interface DataParser {
 	 * @param className 解析映射类文件
 	 * @return
 	 */
-	public <T extends IConfigBean> Map<Object,T> parse(InputStream stream, Class<T> className);
+	<T extends IConfigBean> Map<Object,T> parse(InputStream stream, Class<T> className);
 }
