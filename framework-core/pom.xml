@@ -12,10 +12,10 @@
 
  <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring-version>5.1.2.RELEASE</spring-version>
-		<fastjson-version>1.2.47</fastjson-version>
-		<slf4j-api.version>1.7.21</slf4j-api.version>
-		<httpclient.version>4.5.2</httpclient.version>
+		<spring-version>RELEASE</spring-version>
+		<fastjson-version>RELEASE</fastjson-version>
+		<slf4j-api.version>RELEASE</slf4j-api.version>
+		<httpclient.version>RELEASE</httpclient.version>
 		<jdk-version>1.8</jdk-version>
 	</properties>
 
@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>29.0-jre</version>
+			<version>RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
   </dependencies>
