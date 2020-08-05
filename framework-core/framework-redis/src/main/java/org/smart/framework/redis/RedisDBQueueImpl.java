@@ -1,10 +1,12 @@
 package org.smart.framework.redis;
 
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.smart.framework.datacenter.BaseJdbcTemplate;
 import org.smart.framework.datacenter.DBQueue;
 import org.smart.framework.datacenter.Entity;
+import org.smart.framework.util.ExceptionUtil;
 import org.smart.framework.util.NamedThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -59,7 +61,16 @@ public class RedisDBQueueImpl implements DBQueue {
                     if (o == null) {
                         break;
                     }
-                    //System.out.println(o);
+                    if (o instanceof  Entity){
+
+                        try {
+                            jdbcTemplate.update((Entity) o);
+                        } catch (Exception e) {
+                            LOGGER.error("{}", ExceptionUtil.getStackTrace(e));
+                            LOGGER.error("entity save fail,entity:{}", JSON.toJSONString(o));
+                            redisTemplate.opsForList().rightPush(saveQueue, o);
+                        }
+                    }
                 }
             }
         });
