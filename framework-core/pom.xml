@@ -72,6 +72,7 @@
   	<module>framework-datacenter</module>
   	<module>framework-net</module>
     <module>framework-redis</module>
-     <module>framework-remoting</module>
+      <module>framework-remoting</module>
+      <module>framework-all</module>
   </modules>
 </project>
