@@ -18,19 +18,7 @@
 		</logger>
 		<logger name="io.netty" level="error">
 		</logger>
-		<logger name="org.jerry.framework" level="error">
-		</logger>
-		<logger name="com.feiyu" level="debug">
-		</logger>
-		<logger name="org.jerry.framework.datacenter.BaseDBQueueImpl" level="info">
-		</logger>
-		<logger name="com.feiyu.game.net" level="info">
-		</logger>
-		<logger name="dbqueue" level="info">
-		</logger>
-		<logger name="org.jerry.framework.datacenter.BaseJdbcTemplate" level="INFO">
 			
-		</logger>
 		<Root level="debug">
 			<AppenderRef ref="stdout" />
 		</Root>

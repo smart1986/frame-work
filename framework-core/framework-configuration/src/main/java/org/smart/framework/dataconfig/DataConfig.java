@@ -18,7 +18,7 @@ public interface DataConfig {
 	/**
 	 * 初始化配置数据
 	 */
-	void initModelAdapterList() throws Exception;
+	void initModelAdapterList(DataConfiguration dataConfiguration, DataParser dataParser) throws Exception;
 	/**
 	 * 根据类名获取数据配置列表
 	 * @param modelClass	需要获取的Model类
@@ -60,16 +60,4 @@ public interface DataConfig {
 	 */
 	<T extends IConfigBean> T getConfig(IdentifyKey key, Class<T> clz);
 
-
-
-	public String getPath();
-	void setPath(String path);
-	String getPackageScan();
-	void setPackageScan(String packageScan);
-	String getExtension();
-	void setExtension(String extension);
-
-	DataParser getDataParser();
-
-	void setDataParser(DataParser dataParser);
 }

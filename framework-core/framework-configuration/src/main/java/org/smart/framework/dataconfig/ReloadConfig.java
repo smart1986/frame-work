@@ -1,5 +1,9 @@
 package org.smart.framework.dataconfig;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.smart.framework.util.ThreadFactoryImpl;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,46 +14,23 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.smart.framework.util.ThreadFactoryImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-public class ReloadConfig implements InitializingBean {
+public class ReloadConfig {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(ReloadConfig.class);
 
-	/**
-	 * 配置文件路径
-	 */
-	@Autowired(required = false)
-	@Qualifier("dataconfig.newconfig")
-	private String path = "newconfig" + File.separator;
-
-	/**
-	 * 扫描配置文件变更间隔(毫秒)
-	 */
-	@Autowired(required = false)
-	@Qualifier("dataconfig.flush_time")
-	private long flushTime = 10000L;
+	private DataConfiguration dataConfiguration;
 
 	/**
 	 * 热刷备份文件扩展名
 	 */
 	private static final String bakExtension = ".bak";
 
-	@Autowired
 	private DataConfig dataConfig;
 
-	private boolean isRun = true;
-	
 	private ScheduledExecutorService timer = new ScheduledThreadPoolExecutor(1, new ThreadFactoryImpl("ReloadConfigThread_"));
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
+	public void startCheckFile() throws Exception {
 		URL resource = getClass().getClassLoader()
 				.getResource("");
 		LOGGER.info("fresh config root path:{}", resource.getPath());
@@ -57,11 +38,9 @@ public class ReloadConfig implements InitializingBean {
 			
 			@Override
 			public void run() {
-				if (isRun) {
-					reloadConfig();
-				}
+				reloadConfig();
 			}
-		}, 0, flushTime, TimeUnit.MILLISECONDS);
+		}, 0, dataConfiguration.getFlushTime(), TimeUnit.MILLISECONDS);
 
 	}
 
@@ -95,7 +74,7 @@ public class ReloadConfig implements InitializingBean {
 	}
 
 	private String getPath(String name) {
-		return this.path + name + this.dataConfig.getExtension();
+		return this.dataConfiguration.getPath() + name + this.dataConfiguration.getExtension();
 	}
 
 	public boolean flushFile(String fileName, String data) {
@@ -105,7 +84,7 @@ public class ReloadConfig implements InitializingBean {
 		File file = null;
 		String filePath = "";
 		try {
-			URL resource = getClass().getClassLoader().getResource(path);
+			URL resource = getClass().getClassLoader().getResource(dataConfiguration.getPath());
 			if (resource == null) {
 				resource = checkFolderExist();
 			}
@@ -130,7 +109,7 @@ public class ReloadConfig implements InitializingBean {
 				return false;
 			}
 			boolean isSuccess = file.renameTo(new File(filePath + fileName
-					+ this.dataConfig.getExtension()));
+					+ this.dataConfiguration.getExtension()));
 			if (!isSuccess) {
 				LOGGER.warn("rename[" + fileName + "]fail");
 				return false;
@@ -141,7 +120,7 @@ public class ReloadConfig implements InitializingBean {
 
 	private URL checkFolderExist() {
 		URL url = ClassLoader.getSystemResource("");
-		File dir = new File(url.getPath() + path);
+		File dir = new File(url.getPath() + dataConfiguration.getPath());
 		if (!dir.exists() && !dir.isDirectory()) {// 判断文件目录是否存在
 			boolean isSuccess = dir.mkdirs();
 			if (isSuccess) {
@@ -153,24 +132,12 @@ public class ReloadConfig implements InitializingBean {
 		return url;
 	}
 
-	public String getPath() {
-		return path;
+	public DataConfiguration getDataConfiguration() {
+		return dataConfiguration;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public long getFlushTime() {
-		return flushTime;
-	}
-
-	public void setFlushTime(long flushTime) {
-		this.flushTime = flushTime;
-	}
-
-	public static String getBakExtension() {
-		return bakExtension;
+	public void setDataConfiguration(DataConfiguration dataConfiguration) {
+		this.dataConfiguration = dataConfiguration;
 	}
 
 	public DataConfig getDataConfig() {

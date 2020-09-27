@@ -6,10 +6,11 @@ import org.smart.framework.dataconfig.annotation.DataFile;
 import org.smart.framework.dataconfig.parse.DataParser;
 import org.smart.framework.util.IdentifyKey;
 import org.smart.framework.util.PackageScanner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Collection;
@@ -25,42 +26,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
  *
  */
 public class DataConfigImpl implements DataConfig {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DataConfigImpl.class);
+	protected Logger LOGGER = LoggerFactory.getLogger(DataConfigImpl.class);
 
-	/**
-	 * 配置文件路径
-	 */
-	@Autowired(required = false)
-	@Qualifier("dataconfig.path")
-	private String path = "dataconfig" + File.separator;
-
-	/**
-	 * 数据配置映射对应的包
-	 */
-	@Qualifier("dataconfig.package_scan")
-	@Autowired(required = false)
-	private String packageScan=".";
-
-	/**
-	 * 配置文件扩展名
-	 */
-	@Qualifier("dataconfig.extension")
-	@Autowired(required = false)
-	private String extension = ".xml";
-
-	@Autowired
-	private DataParser dataParser;
+	protected DataConfiguration dataConfiguration;
+	protected DataParser dataParser;
 
 	/**
 	 * 所有数据配置存储集合 key:className value: extend ModelAdapter
 	 */
-	private static ConcurrentHashMap<String, Map<Object, ? extends IConfigBean>> MODEL_MAPS = new ConcurrentHashMap<>();
+	protected  ConcurrentHashMap<String, Map<Object, ? extends IConfigBean>> MODEL_MAPS = new ConcurrentHashMap<>();
 
 	/**
 	 * model类与名称的映射
 	 * key:DataFile.fileName() value:Class
 	 */
-	private static ConcurrentHashMap<String, Class<? extends IConfigBean>> MODEL_CLASS_MAPS = new ConcurrentHashMap<>();
+	protected ConcurrentHashMap<String, Class<? extends IConfigBean>> MODEL_CLASS_MAPS = new ConcurrentHashMap<>();
 
 
 
@@ -100,7 +80,7 @@ public class DataConfigImpl implements DataConfig {
 		}
 
 		String filePath = getFullPath(fileName);
-		URL resource = null;
+		URL resource;
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
 		try {
@@ -136,11 +116,6 @@ public class DataConfigImpl implements DataConfig {
 		return MODEL_CLASS_MAPS.keySet();
 	}
 
-	/**
-	 *
-	 * @param clazz
-	 * @return
-	 */
 	@Override
 	public boolean checkModelAdapter(String fileName, InputStream inputStream) {
 		Class<? extends IConfigBean> clazz = MODEL_CLASS_MAPS.get(fileName);
@@ -176,13 +151,16 @@ public class DataConfigImpl implements DataConfig {
 	 * 初始化ModelAdapter
 	 */
 	@Override
-	public void initModelAdapterList()throws Exception {
-		LOGGER.info("dataconfig path:{}, packageScan:{}, extension:{}, dataParser:{}",path, packageScan, extension,dataParser.getClass().getName());
-		String[] temp = packageScan.split(",");
+	public void initModelAdapterList(DataConfiguration dataConfiguration, DataParser dataParser)throws Exception {
+		this.dataConfiguration = dataConfiguration;
+		this.dataParser = dataParser;
+		LOGGER.info("dataconfig path:{}, packageScan:{}, extension:{}, dataParser:{}",dataConfiguration.getPath(), dataConfiguration.getPackageScan()
+				, dataConfiguration.getExtension(),dataParser.getClass().getName());
+		String[] temp = dataConfiguration.getPackageScan().split(",");
 		// 通过包名扫描获取对应的类集合
 		Collection<Class<IConfigBean>> collection = PackageScanner.scanPackages(temp);
 		if (collection == null || collection.isEmpty()) {
-			LOGGER.error(String.format("在 [%s]包下没有扫描到实体类!", packageScan));
+			LOGGER.error(String.format("在 [%s]包下没有扫描到实体类!", dataConfiguration.getPackageScan()));
 			return;
 		}
 		AtomicBoolean flag = new AtomicBoolean(true);
@@ -210,8 +188,6 @@ public class DataConfigImpl implements DataConfig {
 
 	/**
 	 * 初始化
-	 * @param clazz
-	 * @throws Exception 
 	 */
 	public boolean initModelAdapter(Class<? extends IConfigBean> clazz) throws Exception {
 		try {
@@ -227,8 +203,7 @@ public class DataConfigImpl implements DataConfig {
 				return false;
 			}
 
-			InputStream input = null;
-			input = resource.openStream();
+			InputStream input = resource.openStream();
 			Map<Object, ? extends IConfigBean> list = dataParser.parse(input, clazz);
 			input.close();
 
@@ -268,8 +243,8 @@ public class DataConfigImpl implements DataConfig {
 	 * @param fileName
 	 * @return
 	 */
-	private String getFullPath(String fileName) {
-		return this.path + fileName + this.extension;
+	protected String getFullPath(String fileName) {
+		return this.dataConfiguration.getPath() + fileName + this.dataConfiguration.getExtension();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -289,35 +264,4 @@ public class DataConfigImpl implements DataConfig {
 
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
-	public String getPackageScan() {
-		return packageScan;
-	}
-
-	public void setPackageScan(String packageScan) {
-		this.packageScan = packageScan;
-	}
-
-	public String getExtension() {
-		return extension;
-	}
-
-	public void setExtension(String extension) {
-		this.extension = extension;
-	}
-
-	public DataParser getDataParser() {
-		return dataParser;
-	}
-
-	public void setDataParser(DataParser dataParser) {
-		this.dataParser = dataParser;
-	}
 }
