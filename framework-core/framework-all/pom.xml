@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>org.smart.framework</groupId>
-            <artifactId>framework-dataconfig</artifactId>
+            <artifactId>framework-configuration</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>

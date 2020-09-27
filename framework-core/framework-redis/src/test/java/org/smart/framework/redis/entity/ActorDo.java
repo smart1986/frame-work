@@ -7,7 +7,7 @@ import org.smart.framework.datacenter.SingleEntity;
 import org.smart.framework.datacenter.annotation.Column;
 import org.smart.framework.datacenter.annotation.DBQueueType;
 import org.smart.framework.datacenter.annotation.Table;
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 
 import com.google.common.collect.Lists;
 
@@ -41,17 +41,17 @@ public class ActorDo extends SingleEntity {
 
 
 	@Override
-	public List<IdentiyKey> keyLists() {
-		return Lists.newArrayList(IdentiyKey.build(this.actorId), IdentiyKey.build(uid));
+	public List<IdentifyKey> keyLists() {
+		return Lists.newArrayList(IdentifyKey.build(this.actorId), IdentifyKey.build(uid));
 	}
 
 	@Override
-	public IdentiyKey findPkId() {
-		return IdentiyKey.build(this.actorId);
+	public IdentifyKey findPkId() {
+		return IdentifyKey.build(this.actorId);
 	}
 
 	@Override
-	public void setPkId(IdentiyKey pk) {
+	public void setPkId(IdentifyKey pk) {
 		this.actorId = pk.getIdentifys(0, Long.class);
 	}
 

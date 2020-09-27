@@ -11,42 +11,42 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author smart
  *
  */
-public class IdentiyKey {
-	private Object[] identifys;
+public class IdentifyKey {
+	private Object[] identifies;
 
-	public IdentiyKey() {
+	public IdentifyKey() {
 	}
 
-	public IdentiyKey(Object... pk) {
+	public IdentifyKey(Object... pk) {
 		for (Object object : pk) {
 			if (object == null) {
 				throw new InvalidParameterException();
 			}
 		}
-		identifys = pk;
+		identifies = pk;
 	}
 
-	public void setIdentifys(Object[] identifys) {
-		this.identifys = identifys;
+	public void setIdentifies(Object[] identifies) {
+		this.identifies = identifies;
 	}
-	public Object[] getIdentifys() {
-		return identifys;
+	public Object[] getIdentifies() {
+		return identifies;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <PK extends Object> PK getIdentifys(int index, Class<? extends Object> PK) {
-		return (PK) identifys[index];
+		return (PK) identifies[index];
 	}
 
-	public static IdentiyKey build(Object... pk) {
-		IdentiyKey identiyKey = new IdentiyKey(pk);
+	public static IdentifyKey build(Object... pk) {
+		IdentifyKey identiyKey = new IdentifyKey(pk);
 		return identiyKey;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("[");
-		for (Object object : identifys) {
+		for (Object object : identifies) {
 			sb.append(object.toString()).append(",");
 		}
 		sb.deleteCharAt(sb.length() - 1);
@@ -56,7 +56,7 @@ public class IdentiyKey {
 
 	@JSONField(serialize = false)
 	public Long getFirstLongId() {
-		if (identifys == null || identifys.length == 0) {
+		if (identifies == null || identifies.length == 0) {
 			return 0L;
 		}
 		return getIdentifys(0, Long.class);
@@ -64,7 +64,7 @@ public class IdentiyKey {
 
 	@JSONField(serialize = false)
 	public Integer getFirstIntId() {
-		if (identifys == null || identifys.length == 0) {
+		if (identifies == null || identifies.length == 0) {
 			return 0;
 		}
 		return getIdentifys(0, Integer.class);
@@ -74,7 +74,7 @@ public class IdentiyKey {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Arrays.hashCode(identifys);
+		result = prime * result + Arrays.hashCode(identifies);
 		return result;
 	}
 
@@ -89,12 +89,12 @@ public class IdentiyKey {
 		if (getClass() != obj.getClass()) {
 			return false;
 		}
-		IdentiyKey other = (IdentiyKey) obj;
-		if (!Arrays.equals(identifys, other.identifys)) {
+		IdentifyKey other = (IdentifyKey) obj;
+		if (!Arrays.equals(identifies, other.identifies)) {
 			return false;
 		}
-		for (int i = 0; i < identifys.length; i++) {
-			if (!identifys[i].equals(other.identifys[i])) {
+		for (int i = 0; i < identifies.length; i++) {
+			if (!identifies[i].equals(other.identifies[i])) {
 				return false;
 			}
 		}

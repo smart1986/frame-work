@@ -5,13 +5,13 @@ import java.util.Map;
 import org.smart.framework.datacenter.MutiEntity;
 import org.smart.framework.datacenter.dao.MutiEntityDaoImpl;
 import org.smart.framework.redis.cache.RedisCacheImpl;
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
 public abstract class RedisMutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends MutiEntityDaoImpl<FK,T>{
 	@Autowired
-	private RedisTemplate<String, Map<IdentiyKey, T>> redisTemplate;
+	private RedisTemplate<String, Map<IdentifyKey, T>> redisTemplate;
 	
 	private String keyPrefix = this.getClass().getName() + "_";
 	@Override
@@ -25,7 +25,7 @@ public abstract class RedisMutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extend
 	
 	@Override
 	protected void set2Cache(T entity) {
-		Map<IdentiyKey, T> map = dataCache.getFromCache(entity.findFkId());
+		Map<IdentifyKey, T> map = dataCache.getFromCache(entity.findFkId());
 		map.put(entity.findPkId(), entity);
 		dataCache.setToCache(entity.findFkId(), map);
 	}

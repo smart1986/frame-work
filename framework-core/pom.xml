@@ -14,7 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring-version>RELEASE</spring-version>
 		<fastjson-version>1.2.25.sec10</fastjson-version>
-		<slf4j-api.version>RELEASE</slf4j-api.version>
+		<slf4j-api.version>1.7.25</slf4j-api.version>
 		<httpclient.version>RELEASE</httpclient.version>
 		<jdk-version>1.8</jdk-version>
 	</properties>
@@ -68,7 +68,7 @@
     </build>
   <modules>
   	<module>framework-util</module>
-  	<module>framework-dataconfig</module>
+  	<module>framework-configuration</module>
   	<module>framework-datacenter</module>
   	<module>framework-net</module>
     <module>framework-redis</module>

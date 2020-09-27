@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.smart.framework.datacenter.annotation.Column;
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cglib.beans.BeanCopier;
@@ -30,14 +30,14 @@ public abstract class Entity implements RowMapper<Entity> {
 	 * 
 	 * @return
 	 */
-	public abstract IdentiyKey findPkId();
+	public abstract IdentifyKey findPkId();
 
 	/**
 	 * 设置主键值
 	 * 
 	 * @param id
 	 */
-	public abstract void setPkId(IdentiyKey pk);
+	public abstract void setPkId(IdentifyKey pk);
 
 	/**
 	 * 空字符串常量

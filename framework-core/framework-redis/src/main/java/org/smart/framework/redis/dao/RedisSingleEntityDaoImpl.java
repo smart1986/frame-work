@@ -5,7 +5,6 @@ import javax.annotation.PostConstruct;
 import org.smart.framework.datacenter.SingleEntity;
 import org.smart.framework.datacenter.dao.SingleEntityDaoImpl;
 import org.smart.framework.redis.cache.RedisCacheImpl;
-import org.smart.framework.util.IdentiyKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 

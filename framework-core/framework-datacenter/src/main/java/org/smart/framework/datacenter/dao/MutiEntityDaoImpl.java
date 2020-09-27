@@ -11,7 +11,7 @@ import org.smart.framework.datacenter.EntityInfo;
 import org.smart.framework.datacenter.MutiEntity;
 import org.smart.framework.datacenter.cache.DataCache;
 import org.smart.framework.datacenter.cache.GoogleCacheImpl;
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 
 import com.google.common.collect.Lists;
 
@@ -21,13 +21,13 @@ import com.google.common.collect.Lists;
  * @author smart
  *
  */
-public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends DefaultDao<Map<IdentiyKey, T>> {
+public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends DefaultDao<Map<IdentifyKey, T>> {
 
-	protected DataCache<Map<IdentiyKey, T>> dataCache;
+	protected DataCache<Map<IdentifyKey, T>> dataCache;
 	@PostConstruct
 	@Override
 	protected void createCache() {
-		dataCache = new GoogleCacheImpl<Map<IdentiyKey, T>>(this, this.cacheTime, this.cacheSize,this.cacheMaintain);
+		dataCache = new GoogleCacheImpl<Map<IdentifyKey, T>>(this, this.cacheTime, this.cacheSize,this.cacheMaintain);
 	}
 	@Override
 	public void init() {
@@ -41,7 +41,7 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 	}
 
 	@Override
-	protected Map<IdentiyKey, T> getFromCache(Object key) {
+	protected Map<IdentifyKey, T> getFromCache(Object key) {
 		return dataCache.getFromCache(key);
 	}
 	/**
@@ -51,7 +51,7 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 	 * @param clz
 	 * @return
 	 */
-	public Map<IdentiyKey, T> getByFk(FK fk) {
+	public Map<IdentifyKey, T> getByFk(FK fk) {
 		return dataCache.getFromCache(fk);
 	}
 
@@ -61,18 +61,18 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 	}
 
 	protected void set2Cache(T entity) {
-		Map<IdentiyKey, T> map = dataCache.getFromCache(entity.findFkId());
+		Map<IdentifyKey, T> map = dataCache.getFromCache(entity.findFkId());
 		map.put(entity.findPkId(), entity);
 	}
 
-	public DataCache<Map<IdentiyKey, T>> getDataCache() {
+	public DataCache<Map<IdentifyKey, T>> getDataCache() {
 		return dataCache;
 	}
 
 	@Override
-	public Map<IdentiyKey, T> load(Object key) throws Exception {
+	public Map<IdentifyKey, T> load(Object key) throws Exception {
 		List<T> entitys = loadFromDBWithFK(key);
-		Map<IdentiyKey, T> map = new ConcurrentHashMap<>();
+		Map<IdentifyKey, T> map = new ConcurrentHashMap<>();
 		for (T entity : entitys) {
 			if (entity.findFkId() == null) {
 				throw new RuntimeException("FK is null!");
@@ -125,14 +125,14 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 	 * @param entity
 	 */
 	public void delete(T entity) {
-		Map<IdentiyKey, T> map = dataCache.getFromCache(entity.findFkId());
+		Map<IdentifyKey, T> map = dataCache.getFromCache(entity.findFkId());
 		jdbc.delete(entity);
 		map.remove(entity.findPkId());
 	}
 
 	@Deprecated
 	public void deleteQueue(MutiEntity<?> entity) {
-		Map<IdentiyKey, T> map = dataCache.getFromCache(entity.findFkId());
+		Map<IdentifyKey, T> map = dataCache.getFromCache(entity.findFkId());
 		map.remove(entity.findPkId());
 
 		dbQueue.deleteQueue(entity);
@@ -145,8 +145,8 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 	 * @param pk
 	 * @return
 	 */
-	public T getMutiEnity(FK fk, IdentiyKey pk) {
-		Map<IdentiyKey, T> map = this.getByFk(fk);
+	public T getMutiEnity(FK fk, IdentifyKey pk) {
+		Map<IdentifyKey, T> map = this.getByFk(fk);
 		return  map.get(pk);
 	}
 

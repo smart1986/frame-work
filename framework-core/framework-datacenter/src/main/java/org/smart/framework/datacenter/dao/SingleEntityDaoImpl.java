@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import org.smart.framework.datacenter.SingleEntity;
 import org.smart.framework.datacenter.cache.DataCache;
 import org.smart.framework.datacenter.cache.GoogleCacheImpl;
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -48,7 +48,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	 * 通过非主键key查找
 	 * @param key
 	 */
-	protected T getFromCacheWithCacheOtherKey(final IdentiyKey key) {
+	protected T getFromCacheWithCacheOtherKey(final IdentifyKey key) {
 		Object mKey = getMapping(key);
 		if (mKey == null){
 			T entity = loadFromDBOtherKey(key);
@@ -64,7 +64,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	 * 获取实体
 	 * @param actorId
 	 */
-	public T get(IdentiyKey actorId) {
+	public T get(IdentifyKey actorId) {
 		return get(actorId, true);
 	}
 	/**
@@ -72,7 +72,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	 * @param actorId
 	 * @return
 	 */
-	public  T get(IdentiyKey actorId, boolean pk) {
+	public  T get(IdentifyKey actorId, boolean pk) {
 		if (pk){
 			return getFromCache(actorId);
 		} else {
@@ -92,7 +92,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	}
 	
 	private void setMapping(SingleEntity entity){
-		List<IdentiyKey> keys = entity.keyLists();
+		List<IdentifyKey> keys = entity.keyLists();
 		if (!keys.isEmpty()){
 			for (int i = 0; i < keys.size(); i++) {
 				mappingList.put(keys.get(i), entity.findPkId());
@@ -110,7 +110,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	
 	@Override
 	public T load(Object key) throws Exception {
-		IdentiyKey pk = (IdentiyKey) key;
+		IdentifyKey pk = (IdentifyKey) key;
 		T entity = loadFromDB(pk);
 		if (entity == null){
 			entity = newInstance(pk, forClass());
@@ -125,15 +125,15 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	 * 从数据库加载
 	 * @return
 	 */
-	protected T loadFromDB(IdentiyKey key) {
+	protected T loadFromDB(IdentifyKey key) {
 		T entity = jdbc.get(forClass(), key);
 		return entity;
 	}
-	protected T loadFromDBOtherKey(IdentiyKey key) {
+	protected T loadFromDBOtherKey(IdentifyKey key) {
 		throw new RuntimeException("not implement!");
 	}
 
-	protected  T newInstance(IdentiyKey actorId, Class<T> clz){
+	protected  T newInstance(IdentifyKey actorId, Class<T> clz){
 		try {
 			T entity = clz.newInstance();
 //			LOGGER.debug(String.format("entity create new,class:[%s]",clz.getName()));
@@ -165,7 +165,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	 * @param clz
 	 * @return
 	 */
-	public boolean exsit(IdentiyKey key, Class<? extends SingleEntity> clz){
+	public boolean exsit(IdentifyKey key, Class<? extends SingleEntity> clz){
 		if (dataCache.exist(key)){
 			return true;
 		}
@@ -177,7 +177,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	}
 	
 	public void delete(SingleEntity entity){
-		List<IdentiyKey> keys = entity.keyLists();
+		List<IdentifyKey> keys = entity.keyLists();
 		if (keys.size() > 1){
 			for (int i = 1; i < keys.size(); i++) {
 				mappingList.invalidate(keys.get(i));

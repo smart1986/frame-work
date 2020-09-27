@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.smart.framework.datacenter.annotation.Column;
 import org.smart.framework.datacenter.annotation.Table;
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 import org.smart.framework.util.PackageScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -316,12 +316,12 @@ public class BaseJdbcTemplate extends JdbcTemplate {
 			list.add(info.fkName);
 			list.toArray(tmp);
 			sql = info.getDeleteSql(tmp);
-			List<Object> valueList = Lists.newArrayList(entity.findPkId().getIdentifys());
+			List<Object> valueList = Lists.newArrayList(entity.findPkId().getIdentifies());
 			valueList.add(mutiEntity.findFkId());
 			return super.update(sql, valueList.toArray());
 		} else {
 			sql = info.getDeleteSql(info.pkName);
-			return super.update(sql, entity.findPkId().getIdentifys());
+			return super.update(sql, entity.findPkId().getIdentifies());
 		}
 	}
 
@@ -339,16 +339,16 @@ public class BaseJdbcTemplate extends JdbcTemplate {
 	 * @param pk
 	 * @return
 	 */
-	public <T extends Entity> T get(Class<T> clazz, IdentiyKey pk) {
+	public <T extends Entity> T get(Class<T> clazz, IdentifyKey pk) {
 
 		EntityInfo info = this.getEntityInfo(clazz);
-		if (info.pkName.length != pk.getIdentifys().length) {
+		if (info.pkName.length != pk.getIdentifies().length) {
 			throw new RuntimeException("pk number error");
 		}
 		LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>();
 		for (int i = 0; i < info.pkName.length; i++) {
 			String pkName = info.pkName[i];
-			Object value = pk.getIdentifys()[i];
+			Object value = pk.getIdentifies()[i];
 			map.put(pkName, value);
 		}
 

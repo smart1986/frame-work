@@ -45,7 +45,6 @@ public class PackageScanner {
 			try {
 				String packageSearchPath = "classpath*:" + resolveBasePackage(packageName) + "/" + DEFAULT_RESOURCE_PATTERN;
 				Resource[] resources = resourcePatternResolver.getResources(packageSearchPath);
-
 				for (Resource resource : resources) {
 					String className = "";
 					try {

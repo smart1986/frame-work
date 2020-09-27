@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.smart.framework.redis.entity.ActorDo;
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -49,7 +49,7 @@ public class ActorDao extends RedisSingleEntityDaoImpl<ActorDo> {
     }
 
     public ActorDo getActorByUid(String uid) {
-        return getFromCacheWithCacheOtherKey(IdentiyKey.build(uid));
+        return getFromCacheWithCacheOtherKey(IdentifyKey.build(uid));
     }
 
     public ActorDo getBycondition(LinkedHashMap<String, Object> condition) {
@@ -61,12 +61,12 @@ public class ActorDao extends RedisSingleEntityDaoImpl<ActorDo> {
     }
 
     public ActorDo get(long actorId) {
-        ActorDo actor = get(IdentiyKey.build(actorId));
+        ActorDo actor = get(IdentifyKey.build(actorId));
         return actor;
     }
 
     @Override
-    protected ActorDo loadFromDBOtherKey(IdentiyKey key) {
+    protected ActorDo loadFromDBOtherKey(IdentifyKey key) {
         LinkedHashMap<String, Object> condition = new LinkedHashMap<>();
         condition.put("uid", key.getIdentifys(0, Long.class));
         ActorDo actor = getBycondition(condition);
