@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" monitorInterval="1"
+	shutdownHook="disable">
+	<Properties>
+		<Property name="LOG_HOME">log</Property>
+	</Properties>
+	<Appenders>
+		<Console name="stdout" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %l - %msg%n" />
+		</Console>
+	</Appenders>
+
+	
+
+	<Loggers>
+		<logger name="org.springframework" level="error">
+		</logger>
+		<logger name="io.netty" level="error">
+		</logger>
+		<logger name="org.jerry.framework" level="error">
+		</logger>
+		<logger name="com.feiyu" level="debug">
+		</logger>
+		<logger name="org.jerry.framework.datacenter.BaseDBQueueImpl" level="info">
+		</logger>
+		<logger name="com.feiyu.game.net" level="info">
+		</logger>
+		<logger name="dbqueue" level="info">
+		</logger>
+		<logger name="org.jerry.framework.datacenter.BaseJdbcTemplate" level="INFO">
+			
+		</logger>
+		<Root level="debug">
+			<AppenderRef ref="stdout" />
+		</Root>
+
+
+	</Loggers>
+</Configuration>
