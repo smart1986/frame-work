@@ -14,10 +14,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.smart.framework.dataconfig.annotation.DataFile;
 import org.smart.framework.dataconfig.parse.DataParser;
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 import org.smart.framework.util.PackageScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +30,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
  * @author smart
  *
  */
-public class MutiKeyDataConfigImpl implements DataConfig {
-	private static final Logger LOGGER = LoggerFactory.getLogger(MutiKeyDataConfigImpl.class);
-
-	/**
-	 * 配置文件格式(xml,json)
-	 */
-	@Autowired(required = false)
-	@Qualifier("datacofig.format")
-	private String format = "xml";
+public class MultiKeyDataConfigImpl implements DataConfig {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MultiKeyDataConfigImpl.class);
 
 	/**
 	 * 配置文件路径
@@ -189,6 +183,7 @@ public class MutiKeyDataConfigImpl implements DataConfig {
 	 */
 	@Override
 	public void initModelAdapterList()throws Exception {
+		LOGGER.info("dataconfig path:{}, packageScan:{}, extension:{}, dataParser:{}",path, packageScan, extension,dataParser.getClass().getName());
 		String[] temp = packageScan.split(",");
 		// 通过包名扫描获取对应的类集合
 		Collection<Class<IConfigBean>> collection = PackageScanner.scanPackages(temp);
@@ -197,10 +192,27 @@ public class MutiKeyDataConfigImpl implements DataConfig {
 			return;
 		}
 
-		for (Class<IConfigBean> clazz : collection) {
-			initModelAdapter(clazz);
+		AtomicBoolean flag = new AtomicBoolean(true);
+		AtomicBoolean flagException = new AtomicBoolean(false);
+		collection.parallelStream().forEach(clazz1 -> {
+			try {
+				boolean f = initModelAdapter(clazz1);
+				if (!f){
+					flag.set(false);
+				}
+			} catch (Exception e) {
+				LOGGER.error("", e);
+				flagException.set(true);
+			}
+		});
+		if (flagException.get()){
+			throw new RuntimeException("parse data config error!");
 		}
-		LOGGER.info("all data config file load complete!");
+		if (flag.get()){
+			LOGGER.info("all data config file load complete!");
+		} else {
+			LOGGER.info("part of data config file load complete!");
+		}
 	}
 
 	/**
@@ -230,10 +242,7 @@ public class MutiKeyDataConfigImpl implements DataConfig {
 			if(list.size() < 1){
 				return false;
 			}
-
-			for (IConfigBean obj : list.values()) {
-				obj.initialize();
-			}
+			list.values().parallelStream().forEach(obj -> obj.initialize());
 
 			synchronized (MODEL_MAPS) {
 				if (MODEL_MAPS.contains(clazz.getName())) {
@@ -249,12 +258,12 @@ public class MutiKeyDataConfigImpl implements DataConfig {
 					KEY_MAPPING.put(clazz.getName(), keyMap);
 				}
 				for (Entry<Object, ? extends IConfigBean> entry : list.entrySet()) {
-					if (entry.getValue() instanceof IMutiKeyConfigBean){
-						IMutiKeyConfigBean value = (IMutiKeyConfigBean) entry.getValue();
-						List<IdentiyKey> cacheKeys = value.findCacheKeys();
+					if (entry.getValue() instanceof IMultiKeyConfigBean){
+						IMultiKeyConfigBean value = (IMultiKeyConfigBean) entry.getValue();
+						List<IdentifyKey> cacheKeys = value.findCacheKeys();
 						if (cacheKeys != null && !cacheKeys.isEmpty()){
-							for (IdentiyKey key : cacheKeys) {
-								keyMap.put(key, value.findIdentiyKey());
+							for (IdentifyKey key : cacheKeys) {
+								keyMap.put(key, value.findIdentifyKey());
 							}
 						}
 					}
@@ -273,7 +282,7 @@ public class MutiKeyDataConfigImpl implements DataConfig {
 			return true;
 		} catch (Exception e) {
 			LOGGER.error(String.format("file: [%s] read error!", clazz.getName()), e);
-			throw e;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -290,7 +299,7 @@ public class MutiKeyDataConfigImpl implements DataConfig {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IConfigBean> T getConfig(IdentiyKey key, Class<T> clz) {
+	public <T extends IConfigBean> T getConfig(IdentifyKey key, Class<T> clz) {
 		String name = clz.getName();
 		Map<Object, ? extends IConfigBean> map = MODEL_MAPS.get(name);
 		if (map == null) {
@@ -311,5 +320,43 @@ public class MutiKeyDataConfigImpl implements DataConfig {
 
 	}
 
+	@Override
+	public String getPath() {
+		return path;
+	}
 
+	@Override
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	@Override
+	public String getPackageScan() {
+		return packageScan;
+	}
+
+	@Override
+	public void setPackageScan(String packageScan) {
+		this.packageScan = packageScan;
+	}
+
+	@Override
+	public String getExtension() {
+		return extension;
+	}
+
+	@Override
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+
+	@Override
+	public DataParser getDataParser() {
+		return dataParser;
+	}
+
+	@Override
+	public void setDataParser(DataParser dataParser) {
+		this.dataParser = dataParser;
+	}
 }

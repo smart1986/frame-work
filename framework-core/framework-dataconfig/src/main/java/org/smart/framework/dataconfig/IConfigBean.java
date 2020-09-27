@@ -1,6 +1,6 @@
 package org.smart.framework.dataconfig;
 
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 
 /**
  * model包中的类继承于此
@@ -18,6 +18,6 @@ public interface IConfigBean {
 	 * 获取唯一标识
 	 * @return
 	 */
-	IdentiyKey findIdentiyKey();
+	IdentifyKey findIdentifyKey();
 
 }

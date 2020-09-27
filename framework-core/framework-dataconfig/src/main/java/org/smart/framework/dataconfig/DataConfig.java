@@ -5,7 +5,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.dataconfig.parse.DataParser;
+import org.smart.framework.util.IdentifyKey;
 
 /**
  * 数据配置接口 
@@ -57,5 +58,18 @@ public interface DataConfig {
 	 * @param key
 	 * @return
 	 */
-	<T extends IConfigBean> T getConfig(IdentiyKey key, Class<T> clz);
+	<T extends IConfigBean> T getConfig(IdentifyKey key, Class<T> clz);
+
+
+
+	public String getPath();
+	void setPath(String path);
+	String getPackageScan();
+	void setPackageScan(String packageScan);
+	String getExtension();
+	void setExtension(String extension);
+
+	DataParser getDataParser();
+
+	void setDataParser(DataParser dataParser);
 }

@@ -30,13 +30,6 @@ public class ReloadConfig implements InitializingBean {
 	private String path = "newconfig" + File.separator;
 
 	/**
-	 * 配置文件扩展名
-	 */
-	@Autowired(required = false)
-	@Qualifier("dataconfig.extension")
-	private String extension = ".xml";
-
-	/**
 	 * 扫描配置文件变更间隔(毫秒)
 	 */
 	@Autowired(required = false)
@@ -49,7 +42,7 @@ public class ReloadConfig implements InitializingBean {
 	private static final String bakExtension = ".bak";
 
 	@Autowired
-	DataConfig dataConfig;
+	private DataConfig dataConfig;
 
 	private boolean isRun = true;
 	
@@ -72,38 +65,37 @@ public class ReloadConfig implements InitializingBean {
 
 	}
 
-	private void reloadConfig() {
-		isRun = false;
-		try {
-			for (String name : dataConfig.getAllConfigName()) {
-				String filePath = getPath(name);
-				URL resource = getClass().getClassLoader()
-						.getResource(filePath);
-				if (resource != null) {
-					boolean result = dataConfig.checkModelAdapter(name,
-							resource.openStream());
-					if (result) {
-						dataConfig.reload(name, resource);
-					}
-					LOGGER.info(String.format("load file:[%s] is [%s]", name,
-							result ? "success" : "fail"));
+	private synchronized void reloadConfig() {
 
-					File f = new File(URLDecoder.decode(resource.getPath(),
-							"utf-8"));
-					if (f.exists()) {
-						f.delete();
+			dataConfig.getAllConfigName().parallelStream().forEach(name ->{
+				try {
+					String filePath = getPath(name);
+					URL resource = getClass().getClassLoader()
+							.getResource(filePath);
+					if (resource != null) {
+						boolean result = dataConfig.checkModelAdapter(name,
+								resource.openStream());
+						if (result) {
+							dataConfig.reload(name, resource);
+						}
+						LOGGER.info(String.format("load file:[%s] is [%s]", name,
+								result ? "success" : "fail"));
+
+						File f = new File(URLDecoder.decode(resource.getPath(),
+								"utf-8"));
+						if (f.exists()) {
+							f.delete();
+						}
 					}
+				} catch (Exception ex) {
+					LOGGER.warn("{}", ex);
 				}
-			}
-		} catch (Exception ex) {
-			LOGGER.warn("{}", ex);
-		} finally {
-			isRun = true;
-		}
+			});
+
 	}
 
 	private String getPath(String name) {
-		return this.path + name + extension;
+		return this.path + name + this.dataConfig.getExtension();
 	}
 
 	public boolean flushFile(String fileName, String data) {
@@ -138,7 +130,7 @@ public class ReloadConfig implements InitializingBean {
 				return false;
 			}
 			boolean isSuccess = file.renameTo(new File(filePath + fileName
-					+ extension));
+					+ this.dataConfig.getExtension()));
 			if (!isSuccess) {
 				LOGGER.warn("rename[" + fileName + "]fail");
 				return false;
@@ -161,4 +153,31 @@ public class ReloadConfig implements InitializingBean {
 		return url;
 	}
 
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public long getFlushTime() {
+		return flushTime;
+	}
+
+	public void setFlushTime(long flushTime) {
+		this.flushTime = flushTime;
+	}
+
+	public static String getBakExtension() {
+		return bakExtension;
+	}
+
+	public DataConfig getDataConfig() {
+		return dataConfig;
+	}
+
+	public void setDataConfig(DataConfig dataConfig) {
+		this.dataConfig = dataConfig;
+	}
 }

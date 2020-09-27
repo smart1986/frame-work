@@ -1,6 +1,6 @@
 package org.smart.framework.dataconfig;
 
-import org.smart.framework.util.IdentiyKey;
+import org.smart.framework.util.IdentifyKey;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,7 +16,10 @@ public abstract class ConfigServiceAdapter<T extends IConfigBean> {
 	@Resource
 	public DataConfig dataConfig;
 
-	@PostConstruct
+	public ConfigServiceAdapter() {
+		initAdapter();
+	}
+
 	private void initAdapter() {
 		Class<? extends IConfigBean> clz = forClass();
 		map.put(clz, this);
@@ -41,7 +44,7 @@ public abstract class ConfigServiceAdapter<T extends IConfigBean> {
 	public  Collection<T> getAllConfig(Class<T> clz){
 		return dataConfig.listAll(clz);
 	}
-	public  T getConfig(IdentiyKey key){
+	public  T getConfig(IdentifyKey key){
 		return dataConfig.getConfig(key,forClass());
 	}
 
@@ -55,4 +58,11 @@ public abstract class ConfigServiceAdapter<T extends IConfigBean> {
 	 */
 	protected abstract void clear();
 
+	public DataConfig getDataConfig() {
+		return dataConfig;
+	}
+
+	public void setDataConfig(DataConfig dataConfig) {
+		this.dataConfig = dataConfig;
+	}
 }

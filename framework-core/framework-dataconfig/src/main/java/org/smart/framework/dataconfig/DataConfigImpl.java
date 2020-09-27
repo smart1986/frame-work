@@ -1,10 +1,15 @@
 package org.smart.framework.dataconfig;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.smart.framework.dataconfig.annotation.DataFile;
+import org.smart.framework.dataconfig.parse.DataParser;
+import org.smart.framework.util.IdentifyKey;
+import org.smart.framework.util.PackageScanner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import java.io.*;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Collection;
@@ -12,15 +17,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.smart.framework.dataconfig.annotation.DataFile;
-import org.smart.framework.dataconfig.parse.DataParser;
-import org.smart.framework.util.IdentiyKey;
-import org.smart.framework.util.PackageScanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 数据配置接口功能实现
@@ -29,13 +26,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
  */
 public class DataConfigImpl implements DataConfig {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataConfigImpl.class);
-
-	/**
-	 * 配置文件格式(xml,json)
-	 */
-	@Autowired(required = false)
-	@Qualifier("datacofig.format")
-	private String format = "xml";
 
 	/**
 	 * 配置文件路径
@@ -187,6 +177,7 @@ public class DataConfigImpl implements DataConfig {
 	 */
 	@Override
 	public void initModelAdapterList()throws Exception {
+		LOGGER.info("dataconfig path:{}, packageScan:{}, extension:{}, dataParser:{}",path, packageScan, extension,dataParser.getClass().getName());
 		String[] temp = packageScan.split(",");
 		// 通过包名扫描获取对应的类集合
 		Collection<Class<IConfigBean>> collection = PackageScanner.scanPackages(temp);
@@ -194,11 +185,27 @@ public class DataConfigImpl implements DataConfig {
 			LOGGER.error(String.format("在 [%s]包下没有扫描到实体类!", packageScan));
 			return;
 		}
-
-		for (Class<IConfigBean> clazz : collection) {
-			initModelAdapter(clazz);
+		AtomicBoolean flag = new AtomicBoolean(true);
+		AtomicBoolean flagException = new AtomicBoolean(false);
+		collection.parallelStream().forEach(clazz1 -> {
+			try {
+				boolean f = initModelAdapter(clazz1);
+				if (!f){
+					flag.set(false);
+				}
+			} catch (Exception e) {
+				LOGGER.error("", e);
+				flagException.set(true);
+			}
+		});
+		if (flagException.get()){
+			throw new RuntimeException("parse data config error!");
 		}
-		LOGGER.info("all data config file load complete!");
+		if (flag.get()){
+			LOGGER.info("all data config file load complete!");
+		} else {
+			LOGGER.info("part of data config file load complete!");
+		}
 	}
 
 	/**
@@ -229,9 +236,7 @@ public class DataConfigImpl implements DataConfig {
 				return false;
 			}
 
-			for (IConfigBean obj : list.values()) {
-				obj.initialize();
-			}
+			list.values().parallelStream().forEach(obj -> {obj.initialize();});
 
 			synchronized (MODEL_MAPS) {
 				if (MODEL_MAPS.contains(clazz.getName())) {
@@ -240,7 +245,7 @@ public class DataConfigImpl implements DataConfig {
 				MODEL_MAPS.put(clazz.getName(), list);
 			}
 			MODEL_CLASS_MAPS.put(df.fileName(), clazz);
-			
+
 			ConfigServiceAdapter<?> cfgAdapter = ConfigServiceAdapter.get(clazz);
 			if (cfgAdapter != null) {
 				cfgAdapter.refresh();
@@ -252,7 +257,7 @@ public class DataConfigImpl implements DataConfig {
 			return true;
 		} catch (Exception e) {
 			LOGGER.error(String.format("file: [%s] read error!", clazz.getName()), e);
-			throw e;
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -269,7 +274,7 @@ public class DataConfigImpl implements DataConfig {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends IConfigBean> T getConfig(IdentiyKey key, Class<T> clz) {
+	public <T extends IConfigBean> T getConfig(IdentifyKey key, Class<T> clz) {
 		String name = clz.getName();
 		Map<Object, ? extends IConfigBean> map = MODEL_MAPS.get(name);
 
@@ -284,5 +289,35 @@ public class DataConfigImpl implements DataConfig {
 
 	}
 
+	public String getPath() {
+		return path;
+	}
 
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public String getPackageScan() {
+		return packageScan;
+	}
+
+	public void setPackageScan(String packageScan) {
+		this.packageScan = packageScan;
+	}
+
+	public String getExtension() {
+		return extension;
+	}
+
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+
+	public DataParser getDataParser() {
+		return dataParser;
+	}
+
+	public void setDataParser(DataParser dataParser) {
+		this.dataParser = dataParser;
+	}
 }
