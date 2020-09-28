@@ -23,7 +23,7 @@
 		<property name="dataSource" ref="dataSource"></property>
 		<property name="packageScan" value="org.smart.framework.datacenter.entity"></property>
 	</bean>
-	<bean id="dbQueue" class="org.smart.framework.datacenter.BaseDBQueueImpl">
+	<bean id="dataStore" class="org.smart.framework.datacenter.BaseDataStoreImpl">
 	</bean>
 
 	<bean id="cache.time" class="java.lang.Integer">

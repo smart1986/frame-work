@@ -5,7 +5,7 @@ package org.smart.framework.datacenter;
  *
  * @param <FK>
  */
-public abstract class MutiEntity<FK> extends Entity {
+public abstract class MultiEntity<FK> extends Entity {
 	public abstract FK findFkId();
 	public abstract void setFkId(FK fk);
 	@Override
@@ -25,7 +25,7 @@ public abstract class MutiEntity<FK> extends Entity {
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		MutiEntity<FK> other = (MutiEntity<FK>) obj;
+		MultiEntity<FK> other = (MultiEntity<FK>) obj;
 		if (findFkId() == null) {
 			if (other.findFkId() != null)
 				return false;

@@ -1,11 +1,8 @@
-package org.smart.framework.redis;
+package org.smart.framework.datacenter;
 
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.smart.framework.datacenter.BaseJdbcTemplate;
-import org.smart.framework.datacenter.DBQueue;
-import org.smart.framework.datacenter.Entity;
 import org.smart.framework.util.ExceptionUtil;
 import org.smart.framework.util.NamedThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class RedisDBQueueImpl implements DBQueue {
+public class RedisDataStoreImpl implements DataStore {
     protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
@@ -77,60 +74,31 @@ public class RedisDBQueueImpl implements DBQueue {
     }
 
     @Override
-    public void updateQueue(Entity... entity) {
+    public void update(Entity... entity) {
         for (Entity en : entity) {
             redisTemplate.opsForList().leftPush(saveQueue, en);
         }
     }
 
     @Override
-    public void deleteQueue(Entity... entity) {
+    public void delete(Entity... entity) {
 
     }
 
     @Override
-    public void updateQueue(Collection<Entity> entities) {
+    public void update(Collection<Entity> entities) {
         redisTemplate.opsForList().leftPush(saveQueue, entities);
     }
 
     @Override
-    public void insertQueue(Entity... entity) {
+    public void insert(Entity... entity) {
 
     }
 
     @Override
-    public void insertQueue(Collection<Entity> entities) {
+    public void insert(Collection<Entity> entities) {
 
     }
 
-    @Override
-    public int getTaskSize() {
-        return 0;
-    }
-
-    @Override
-    public int getNormalEntitySize() {
-        return 0;
-    }
-
-    @Override
-    public int getActorSize() {
-        return 0;
-    }
-
-    @Override
-    public void changeBlockTime(int flag) {
-
-    }
-
-    @Override
-    public boolean actorInQueue(Object actorId) {
-        return false;
-    }
-
-    @Override
-    public void addShutdownBefore(Runnable r) {
-
-    }
 
 }

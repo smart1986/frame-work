@@ -1,28 +1,17 @@
 package org.smart.framework.datacenter;
 
-import java.lang.reflect.Field;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import org.smart.framework.datacenter.annotation.Column;
-import org.smart.framework.datacenter.annotation.Table;
-import org.smart.framework.util.IdentifyKey;
-import org.smart.framework.util.PackageScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cglib.beans.BeanCopier;
+import org.smart.framework.util.IdentifyKey;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.esotericsoftware.reflectasm.ConstructorAccess;
 import com.google.common.collect.Lists;
 
 /**
@@ -34,117 +23,6 @@ import com.google.common.collect.Lists;
 public class BaseJdbcTemplate extends JdbcTemplate {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	protected String packageScan;
-
-	public void entityScan(String[] packageScan) {
-		// 获取所有继承于Entity类的对象列表。
-		// 扫描所有Entity对象。获取 表名，字段名,
-		Collection<Class<Entity>> collection = PackageScanner.scanPackages(packageScan);
-		DatabaseMetaData databaseMetaData = null;
-		try {
-			databaseMetaData = this.getDataSource().getConnection().getMetaData();
-		} catch (SQLException e1) {
-			throw new RuntimeException(e1);
-		}
-		for (Class<Entity> clz : collection) {
-			if (Entity.class.isAssignableFrom(clz)) {
-				EntityInfo ei = new EntityInfo();
-				ei.className = clz.getCanonicalName();
-				Table tname = clz.getAnnotation(Table.class);
-				if (null != tname) {
-					ei.tableName = "`" + tname.name() + "`";
-					ei.tableType = tname.type();
-				} else {
-					LOGGER.error(clz.getCanonicalName() + "未定义表名");
-					continue;
-				}
-				List<String> dbColumeNames = new ArrayList<>();
-				try {
-					ResultSet rs = databaseMetaData.getTables(null, null, ei.tableName, new String[] { "TABLE" });
-					if (rs.next() == false) {
-						throw new RuntimeException(tname + "表不存在.");
-					}
-
-					rs = databaseMetaData.getColumns(null, null, ei.tableName, "%");
-					while (rs.next()) {
-						dbColumeNames.add("`" + rs.getString("COLUMN_NAME") + "`");
-					}
-					String[] tableNames = new String[dbColumeNames.size()];
-					ei.dbColumnNames = dbColumeNames.toArray(tableNames);
-				} catch (SQLException e) {
-					throw new RuntimeException(e);
-				}
-
-				// Entity反射属性列表
-				Field[] fields = clz.getDeclaredFields();
-				ArrayList<String> entityField = new ArrayList<>();
-				List<String> pkNames = new ArrayList<>();
-				for (Field field : fields) {
-
-					Column column = field.getAnnotation(Column.class);
-					if (null != column) {
-
-						String dbColumName = (!("").equals(column.alias())) ? column.alias() : field.getName();
-						dbColumName = "`" + dbColumName + "`";
-						if (column.pk()) {
-							pkNames.add(dbColumName);
-						}
-						if (column.fk()) {
-							ei.fkName = dbColumName;
-						}
-						entityField.add(dbColumName);
-						ei.columnNameMapping.put(dbColumName, field.getName());
-						ei.feildNameMapping.put(field.getName(), dbColumName);
-					}
-				}
-
-				String[] pNames = new String[pkNames.size()];
-				ei.pkName = pkNames.toArray(pNames);
-				if (ei.pkName == null || ei.pkName.length == 0) {
-					LOGGER.error(ei.className + " 实体缺少主键");
-				}
-				Set<String> set = new HashSet<>(Arrays.asList(ei.dbColumnNames));
-				for (String dbc : ei.columnNameMapping.keySet()) {
-					if (!set.contains(dbc)) {
-						throw new RuntimeException(
-								"entity:" + ei.className + " table: " + ei.tableName + " " + dbc + " colume not exsit");
-					}
-				}
-
-				// 实例化Entity
-				try {
-					ei.entity = clz.newInstance();
-				} catch (InstantiationException | IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
-				EntityInfo.ENTITY_INFOS.put(clz, ei);
-				EntityInfo.ENTITY_BEANCOPIER.put(clz, BeanCopier.create(clz, clz, false));
-				EntityInfo.ENTITY_CONSTRUCT_ACCESS.put(clz, ConstructorAccess.get(clz));
-			}
-
-		}
-	}
-	
-	public void trancateAll() {
-		Collection<Class<Entity>> collection = PackageScanner.scanPackages(packageScan);
-		for (Class<Entity> clz : collection) {
-			if (Entity.class.isAssignableFrom(clz)) {
-				EntityInfo ei = new EntityInfo();
-				ei.className = clz.getCanonicalName();
-				Table tname = clz.getAnnotation(Table.class);
-				if (null != tname) {
-					this.execute("TRUNCATE TABLE " + "`" + tname.name() + "`");
-				} 
-			}
-
-		}
-	}
-
-	public void init() {
-		LOGGER.info("db bean package:{}", packageScan);
-		String[] temp = packageScan.split(",");
-		entityScan(temp);
-	}
 
 	public EntityInfo getEntityInfo(Class<? extends Entity> clz) {
 		if (!EntityInfo.ENTITY_INFOS.containsKey(clz)) {
@@ -189,6 +67,40 @@ public class BaseJdbcTemplate extends JdbcTemplate {
 				result.add(key, values.get(fieldName));
 			}
 		}
+		if (info.fkName != null) {
+			String key = info.columnNameMapping.get(info.fkName);
+			if (values.containsKey(key)) {
+				result.add(info.fkName, values.get(key));
+			}
+		}
+		for (String pk : info.pkName) {
+			String key = info.columnNameMapping.get(pk);
+			if (values.containsKey(key)) {
+				result.add(pk, values.get(key));
+			}
+		}
+		return result;
+	}
+	private <T extends Entity> DataKeyValue<String, Object> getDbKeyValue(Class<T> clz,Map<String,Object> values) {
+		EntityInfo info = this.getEntityInfo(clz);
+		DataKeyValue<String, Object> result = new DataKeyValue<>();
+//		Map<String, Object> values = null;
+//		try {
+//			values = entity.rowValue();
+//		} catch (IllegalArgumentException | IllegalAccessException e) {
+//			logger.error("{}", e);
+//			return result;
+//		}
+		Iterator<String> it = values.keySet().iterator();
+		while (it.hasNext()){
+			String fieldName = it.next();
+			String key = info.feildNameMapping.get(fieldName);
+			if (key == null) {
+				LOGGER.error("clz {} field:{} not found!",clz.getName(), fieldName);
+				it.remove();
+			}
+		}
+
 		if (info.fkName != null) {
 			String key = info.columnNameMapping.get(info.fkName);
 			if (values.containsKey(key)) {
@@ -251,16 +163,25 @@ public class BaseJdbcTemplate extends JdbcTemplate {
 	 */
 	public <T extends Entity> int update(T entity, String... fieldNames) {
 		DataKeyValue<String, Object> map = getDbKeyValue(entity,fieldNames);
-		EntityInfo info = this.getEntityInfo(entity.getClass());
+		return  _update(entity.getClass(),map);
+	}
+
+	public <T extends Entity> int update(Class<T> clz, Map<String, Object> entityValues){
+		DataKeyValue<String, Object> map = getDbKeyValue(clz,entityValues);
+
+		return _update(clz,map);
+	}
+
+	private <T extends Entity> int _update(Class<T> clz, DataKeyValue<String, Object> map){
+		EntityInfo info = this.getEntityInfo(clz);
 		String sql = info.getUpdateSql(map.getKeys());
-		List<Object> valuses = new ArrayList<>(map.getValues());
-		return super.update(sql, valuses.toArray());
+		List<Object> values = new ArrayList<>(map.getValues());
+		return super.update(sql, values.toArray());
 	}
 
 	/**
 	 * 更新批量
 	 * 
-	 * @param entity
 	 * @return 返回数据库每条语句影响行数
 	 */
 	public <T extends Entity> int[] update(Collection<T> entitys) {
@@ -309,15 +230,15 @@ public class BaseJdbcTemplate extends JdbcTemplate {
 		EntityInfo info = this.getEntityInfo(entity.getClass());
 		String sql = null;
 		String[] tmp = null;
-		if (entity instanceof MutiEntity<?>) {
-			MutiEntity<?> mutiEntity = (MutiEntity<?>) entity;
+		if (entity instanceof MultiEntity<?>) {
+			MultiEntity<?> multiEntity = (MultiEntity<?>) entity;
 			tmp = new String[info.pkName.length + 1];
 			ArrayList<String> list = Lists.newArrayList(info.pkName);
 			list.add(info.fkName);
 			list.toArray(tmp);
 			sql = info.getDeleteSql(tmp);
 			List<Object> valueList = Lists.newArrayList(entity.findPkId().getIdentifies());
-			valueList.add(mutiEntity.findFkId());
+			valueList.add(multiEntity.findFkId());
 			return super.update(sql, valueList.toArray());
 		} else {
 			sql = info.getDeleteSql(info.pkName);
@@ -358,11 +279,6 @@ public class BaseJdbcTemplate extends JdbcTemplate {
 	/**
 	 * 获取首行记录
 	 * 
-	 * @param clazz
-	 *            查询实体类
-	 * @param params
-	 *            查询条件 key:字段名 value:查询值
-	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Entity> T getFirst(Class<T> clazz, LinkedHashMap<String, Object> condition) {
@@ -395,7 +311,7 @@ public class BaseJdbcTemplate extends JdbcTemplate {
 	 * 
 	 * @param clazz
 	 *            查询实体类
-	 * @param params
+	 * @param condition
 	 *            查询条件 key:字段名 value:查询值
 	 * @return
 	 */
@@ -499,12 +415,4 @@ public class BaseJdbcTemplate extends JdbcTemplate {
 		}
 		return map;
 	}
-	
-	public String getPackageScan() {
-		return packageScan;
-	}
-	public void setPackageScan(String packageScan) {
-		this.packageScan = packageScan;
-	}
-
 }

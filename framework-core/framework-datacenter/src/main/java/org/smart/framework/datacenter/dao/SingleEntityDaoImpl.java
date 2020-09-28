@@ -27,7 +27,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	protected void createCache() {
 		dataCache = new GoogleCacheImpl<T>(this, this.cacheTime, this.cacheSize,this.cacheMaintain);
 	}
-	
+
 	@Override
 	public void init() {
 		initMaxId();
@@ -35,7 +35,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	@Override
 	public void cleanCache() {
 		dataCache.clean();
-		
+
 	}
 
 	/**
@@ -84,7 +84,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	public void updateQueue(T entity) {
 		entity.setNewEntity(false);
 		set2Cache(entity);
-		dbQueue.updateQueue(entity);
+		dataStore.update(entity);
 	}
 	
 	private Object getMapping( Object key){
@@ -107,7 +107,7 @@ public abstract class SingleEntityDaoImpl<T extends SingleEntity> extends Defaul
 	public DataCache<T> getDataCache() {
 		return dataCache;
 	}
-	
+
 	@Override
 	public T load(Object key) throws Exception {
 		IdentifyKey pk = (IdentifyKey) key;
