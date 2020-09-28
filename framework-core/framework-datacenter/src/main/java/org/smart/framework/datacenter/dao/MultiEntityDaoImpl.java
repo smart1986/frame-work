@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 
 import org.smart.framework.datacenter.EntityInfo;
-import org.smart.framework.datacenter.MutiEntity;
+import org.smart.framework.datacenter.MultiEntity;
 import org.smart.framework.datacenter.cache.DataCache;
 import org.smart.framework.datacenter.cache.GoogleCacheImpl;
 import org.smart.framework.util.IdentifyKey;
@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
  * @author smart
  *
  */
-public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends DefaultDao<Map<IdentifyKey, T>> {
+public abstract class MultiEntityDaoImpl<FK,T extends MultiEntity<FK>> extends DefaultDao<Map<IdentifyKey, T>> {
 
 	protected DataCache<Map<IdentifyKey, T>> dataCache;
 	@PostConstruct
@@ -37,7 +37,7 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 	@Override
 	public void cleanCache() {
 		dataCache.clean();
-		
+
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 
 	public void updateQueue(T entity) {
 		set2Cache(entity);
-		dbQueue.updateQueue(entity);
+		dataStore.update(entity);
 	}
 
 	protected void set2Cache(T entity) {
@@ -95,7 +95,7 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 	 */
 	protected List<T> loadFromDBWithFK(Object key) {
 		LinkedHashMap<String, Object> condition = new LinkedHashMap<>();
-		Class<? extends MutiEntity<?>> clz = forClass();
+		Class<? extends MultiEntity<?>> clz = forClass();
 		EntityInfo info = jdbc.getEntityInfo(clz);
 		if (info.fkName == null) {
 			throw new RuntimeException("fk not exsit!");
@@ -131,11 +131,11 @@ public abstract class MutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends Def
 	}
 
 	@Deprecated
-	public void deleteQueue(MutiEntity<?> entity) {
+	public void deleteQueue(MultiEntity<?> entity) {
 		Map<IdentifyKey, T> map = dataCache.getFromCache(entity.findFkId());
 		map.remove(entity.findPkId());
 
-		dbQueue.deleteQueue(entity);
+		dataStore.delete(entity);
 	}
 
 	/**

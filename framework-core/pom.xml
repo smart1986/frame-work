@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>RELEASE</version>
+			<version>29.0-jre</version>
 			<scope>compile</scope>
 		</dependency>
   </dependencies>
@@ -71,7 +71,6 @@
   	<module>framework-configuration</module>
   	<module>framework-datacenter</module>
   	<module>framework-net</module>
-    <module>framework-redis</module>
       <module>framework-remoting</module>
       <module>framework-all</module>
   </modules>

@@ -30,7 +30,7 @@ public class SpringBoot implements ApplicationListener<ContextRefreshedEvent> {
 
 
     @Autowired
-    private DBQueue dbQueue;
+    private DataStore dataStore;
 
 
     @Override
@@ -41,8 +41,8 @@ public class SpringBoot implements ApplicationListener<ContextRefreshedEvent> {
             logger.info("spring boot complete!");
 
             try {
-                dbQueue.initialize();
-                baseJdbcTemplate.init();
+                dataStore.initialize();
+                DBColumnCheckUtil.check(".", baseJdbcTemplate);
                 Map<String, BaseDao> daos = event.getApplicationContext().getBeansOfType(BaseDao.class);
                 for (BaseDao dao : daos.values()) {
                     dao.init();

@@ -1,10 +1,9 @@
-package org.smart.framework.redis.cache;
+package org.smart.framework.datacenter.cache;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.smart.framework.datacenter.cache.DataCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -22,7 +21,7 @@ public class RedisCacheImpl<T> implements DataCache<T>{
 	
 	private String keyPrefix;
 	public RedisCacheImpl(CacheLoader<Object, T> cacheLoader, int expireTimeSeconds,
-			RedisTemplate<String, T> redisTemplate,String keyPrefix) {
+                          RedisTemplate<String, T> redisTemplate, String keyPrefix) {
 		super();
 		this.cacheLoader = cacheLoader;
 		this.expireTimeSeconds = expireTimeSeconds;
@@ -30,16 +29,18 @@ public class RedisCacheImpl<T> implements DataCache<T>{
 		this.keyPrefix = keyPrefix;
 	}
 	public RedisCacheImpl(int expireTimeSeconds,
-			RedisTemplate<String, T> redisTemplate,String keyPrefix) {
+                          RedisTemplate<String, T> redisTemplate, String keyPrefix) {
 		this(null,expireTimeSeconds,redisTemplate,keyPrefix);
 	}
 	
-	
+	private String findKey(Object key){
+		return keyPrefix + ":" + key;
+	}
 	
 
 	@Override
 	public T getFromCache(Object key) {
-		T o = redisTemplate.opsForValue().get(keyPrefix + key);
+		T o = redisTemplate.opsForValue().get(findKey(key));
 		if (o == null) {
 			if (cacheLoader == null) {
 				return null;
@@ -59,7 +60,7 @@ public class RedisCacheImpl<T> implements DataCache<T>{
 
 	@Override
 	public void setToCache(Object key, T value) {
-		redisTemplate.opsForValue().set(keyPrefix + key, value, expireTimeSeconds, TimeUnit.SECONDS);
+		redisTemplate.opsForValue().set(findKey(key), value, expireTimeSeconds, TimeUnit.SECONDS);
 	}
 
 	@Override
@@ -69,7 +70,7 @@ public class RedisCacheImpl<T> implements DataCache<T>{
 
 	@Override
 	public boolean exist(Object key) {
-		return redisTemplate.hasKey(keyPrefix + key);
+		return redisTemplate.hasKey(findKey(key));
 	}
 
 	@Override
@@ -86,12 +87,12 @@ public class RedisCacheImpl<T> implements DataCache<T>{
 
 	@Override
 	public void remove(Object key) {
-		redisTemplate.delete(keyPrefix + key);
+		redisTemplate.delete(findKey(key));
 		
 	}
 	@Override
 	public void clean() {
-		redisTemplate.delete("*");
+		redisTemplate.delete(findKey("*"));
 	}
 
 }

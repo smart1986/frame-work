@@ -1,15 +1,14 @@
-package org.smart.framework.redis.dao;
+package org.smart.framework.datacenter.dao;
 
-import java.util.Map;
-
-import org.smart.framework.datacenter.MutiEntity;
-import org.smart.framework.datacenter.dao.MutiEntityDaoImpl;
-import org.smart.framework.redis.cache.RedisCacheImpl;
+import org.smart.framework.datacenter.MultiEntity;
+import org.smart.framework.datacenter.cache.RedisCacheImpl;
 import org.smart.framework.util.IdentifyKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
-public abstract class RedisMutiEntityDaoImpl<FK,T extends MutiEntity<FK>> extends MutiEntityDaoImpl<FK,T>{
+import java.util.Map;
+
+public abstract class RedisMultiEntityDadoImpl<FK,T extends MultiEntity<FK>> extends MultiEntityDaoImpl<FK,T> {
 	@Autowired
 	private RedisTemplate<String, Map<IdentifyKey, T>> redisTemplate;
 	

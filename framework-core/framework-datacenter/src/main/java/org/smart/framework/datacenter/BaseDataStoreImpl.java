@@ -30,7 +30,7 @@ import org.springframework.dao.DataAccessException;
  * @author smart
  *
  */
-public class BaseDBQueueImpl implements DBQueue {
+public class BaseDataStoreImpl implements DataStore {
 	protected final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	/**
@@ -196,7 +196,7 @@ public class BaseDBQueueImpl implements DBQueue {
 	}
 
 	@Override
-	public void updateQueue(Entity... entities) {
+	public void update(Entity... entities) {
 		for (Entity entity : entities) {
 			entity = entity.depthClone();
 			EntityInfo info = jdbcTemplate.getEntityInfo(entity.getClass());
@@ -218,9 +218,9 @@ public class BaseDBQueueImpl implements DBQueue {
 	}
 
 	@Override
-	public void updateQueue(Collection<Entity> entities) {
+	public void update(Collection<Entity> entities) {
 		for (Entity entity : entities) {
-			updateQueue(entity);
+			update(entity);
 		}
 	}
 
@@ -230,7 +230,6 @@ public class BaseDBQueueImpl implements DBQueue {
 	 * @param true:使用配置时间，false:使用1秒提交一次
 	 * @return 返回提交个数
 	 */
-	@Override
 	public void changeBlockTime(int flag) {
 		// 设置阻塞时间为flag ms
 		// if (flag <= 1000) {
@@ -254,9 +253,9 @@ public class BaseDBQueueImpl implements DBQueue {
 	 */
 	private void putActorEntity(Entity entity) {
 		Object actorId = null;
-		if (entity instanceof MutiEntity<?>) {
-			MutiEntity<?> mutiEntity = (MutiEntity<?>) entity;
-			actorId = mutiEntity.findFkId();
+		if (entity instanceof MultiEntity<?>) {
+			MultiEntity<?> multiEntity = (MultiEntity<?>) entity;
+			actorId = multiEntity.findFkId();
 		} else {
 			actorId = entity.findPkId();
 		}
@@ -418,7 +417,7 @@ public class BaseDBQueueImpl implements DBQueue {
 					}
 
 					if (failList.size() > 0) {
-						updateQueue(failList);
+						update(failList);
 					}
 
 				}
@@ -469,7 +468,7 @@ public class BaseDBQueueImpl implements DBQueue {
 						} catch (Exception e) {
 							EntityInfo info = jdbcTemplate.getEntityInfo(updateEntity.getClass());
 							if (e instanceof DataAccessException) { // 数据库访问异常重新加入队列
-								updateQueue(updateEntity);
+								update(updateEntity);
 								LOGGER.error(String.format(
 										"save db error. pk:[%s], tableName:[%s], entity add to updateQueue.",
 										updateEntity.findPkId(), info.tableName), e);
@@ -490,7 +489,6 @@ public class BaseDBQueueImpl implements DBQueue {
 	 * 
 	 * @return
 	 */
-	@Override
 	public int getTaskSize() {
 		int num = 0;
 		if (EXECUTOR instanceof ThreadPoolExecutor) {
@@ -499,12 +497,10 @@ public class BaseDBQueueImpl implements DBQueue {
 		return num;
 	}
 
-	@Override
 	public int getNormalEntitySize() {
 		return this.normalEntityQueue.size();
 	}
 
-	@Override
 	public int getActorSize() {
 		return actorQueueMap.size();
 	}
@@ -570,7 +566,6 @@ public class BaseDBQueueImpl implements DBQueue {
 		};
 	}
 
-	@Override
 	public boolean actorInQueue(Object actorId) {
 		synchronized (syncLock) {
 
@@ -579,14 +574,14 @@ public class BaseDBQueueImpl implements DBQueue {
 	}
 
 	@Override
-	public void insertQueue(Collection<Entity> entities) {
+	public void insert(Collection<Entity> entities) {
 		for (Entity entity : entities) {
-			insertQueue(entity);
+			insert(entity);
 		}
 	}
 
 	@Override
-	public void insertQueue(Entity... entities) {
+	public void insert(Entity... entities) {
 		for (Entity entity : entities) {
 			insertEntityQueue.add(entity);
 		}
@@ -650,13 +645,12 @@ public class BaseDBQueueImpl implements DBQueue {
 	}
 
 	@Override
-	public void deleteQueue(Entity... entitys) {
+	public void delete(Entity... entitys) {
 		for (Entity entity : entitys) {
 			deleteEntityQueue.add(entity);
 		}
 	}
 
-	@Override
 	public void addShutdownBefore(Runnable r) {
 		shutdownTask.add(r);
 

@@ -1,10 +1,9 @@
-package org.smart.framework.redis.dao;
+package org.smart.framework.datacenter.dao;
 
 import javax.annotation.PostConstruct;
 
 import org.smart.framework.datacenter.SingleEntity;
-import org.smart.framework.datacenter.dao.SingleEntityDaoImpl;
-import org.smart.framework.redis.cache.RedisCacheImpl;
+import org.smart.framework.datacenter.cache.RedisCacheImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -14,7 +13,7 @@ public abstract class RedisSingleEntityDaoImpl<T extends SingleEntity> extends S
 	
 	private String keyPrefix = this.getClass().getName() + "_";
 	
-	private long expire = -1;
+//	private long expire = -1;
 	
 	@PostConstruct
 	protected void createCache() {

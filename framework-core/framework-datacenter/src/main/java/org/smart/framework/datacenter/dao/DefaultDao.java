@@ -3,7 +3,7 @@ package org.smart.framework.datacenter.dao;
 import javax.annotation.PostConstruct;
 
 import org.smart.framework.datacenter.BaseJdbcTemplate;
-import org.smart.framework.datacenter.DBQueue;
+import org.smart.framework.datacenter.DataStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public abstract class DefaultDao<T> extends CacheLoader<Object, T> implements Ba
 	@Qualifier("jdbcTemplate")
 	protected BaseJdbcTemplate jdbc;
 	@Autowired
-	protected DBQueue dbQueue;
+	protected DataStore dataStore;
 	@Autowired(required=false)
 	@Qualifier("cache.time")
 	protected Integer cacheTime = 900;
@@ -29,9 +29,9 @@ public abstract class DefaultDao<T> extends CacheLoader<Object, T> implements Ba
 	@Autowired(required=false)
 	@Qualifier("cache.maintain")
 	protected Boolean cacheMaintain = false;
-	
+
 	@PostConstruct
 	protected abstract void createCache() ;
-	
+
 	protected abstract T getFromCache(final Object key);
 }
