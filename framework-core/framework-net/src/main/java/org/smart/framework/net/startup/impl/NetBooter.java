@@ -1,5 +1,7 @@
 package org.smart.framework.net.startup.impl;
 
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.socket.ServerSocketChannel;
 import org.smart.framework.net.startup.Booter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,17 +28,31 @@ public class NetBooter implements Booter {
 	private ChannelInitializer<SocketChannel> initializer;
 	private int port = 10123;
 	private String name;
+	private Class<? extends ServerSocketChannel> channelClass;
 
 	public NetBooter(String name, int port, ChannelInitializer<SocketChannel> initializer) {
-		this(name,port,initializer,0,0);
+		this(name,port,initializer,0,0, false);
 	}
-	public NetBooter(String name, int port, ChannelInitializer<SocketChannel> initializer,int bossThread, int workerThread) {
+	public NetBooter(String name, int port, ChannelInitializer<SocketChannel> initializer, boolean useNativeEpoll) {
+		this(name,port,initializer,0,0,useNativeEpoll);
+	}
+	public NetBooter(String name, int port, ChannelInitializer<SocketChannel> initializer,int bossThread, int workerThread, boolean useNativeEpoll) {
 		this.initializer = initializer;
 		this.port = port;
 		this.name = name;
 		
 		bossGroup = new NioEventLoopGroup(bossThread); // (1)
 		workerGroup = new NioEventLoopGroup(workerThread);
+		boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+		if (isWindows){
+			channelClass = NioServerSocketChannel.class;
+		} else {
+			if (useNativeEpoll) {
+				channelClass = EpollServerSocketChannel.class;
+			} else {
+				channelClass = NioServerSocketChannel.class;
+			}
+		}
 	}
 
 	@Override
@@ -44,7 +60,7 @@ public class NetBooter implements Booter {
 
 		try {
 			ServerBootstrap b = new ServerBootstrap(); // (2)
-			b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class) // (3)
+			b.group(bossGroup, workerGroup).channel(channelClass) // (3)
 					.childHandler(initializer).option(ChannelOption.SO_BACKLOG, 128) // (5)
 					.childOption(ChannelOption.SO_KEEPALIVE, true); // (6)
 
