@@ -1,20 +1,15 @@
 package org.smart.framework.dataconfig.parse;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.parser.Feature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.smart.framework.dataconfig.IConfigBean;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.smart.framework.dataconfig.IConfigBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.parser.Feature;
 
 public class JsonDataParser implements DataParser {
 	private static final Logger LOGGER = LoggerFactory.getLogger(JsonDataParser.class);
@@ -40,8 +35,9 @@ public class JsonDataParser implements DataParser {
 
 		String jsonString = sb.toString();
 		List<String> arr = JSON.parseArray(jsonString,String.class);
-		for (String s : arr) {
-			T t = JSON.parseObject(s,className,Feature.SupportNonPublicField,Feature.SupportArrayToBean,Feature.UseObjectArray);
+		for (int i = 0; i < arr.size(); i++) {
+			String s = arr.get(i);
+			T t = JSON.parseObject(s,className, Feature.SupportNonPublicField,Feature.SupportArrayToBean,Feature.UseObjectArray);
 			if(t.findIdentifyKey() == null){
 				throw new RuntimeException(String.format("null config key::%s, class:%s", t.findIdentifyKey(), className));
 			}
@@ -50,6 +46,22 @@ public class JsonDataParser implements DataParser {
 			}
 			objList.put(t.findIdentifyKey(), t);
 		}
+//		for (String s : arr) {
+//			T t = null;
+//			try {
+//				t = JSON.parseObject(s,className, Feature.SupportNonPublicField,Feature.SupportArrayToBean,Feature.UseObjectArray);
+//			} catch (Exception e) {
+//				LOGGER.error("parse json error, className:{}, json:{}, index:{}", className.getName(),jsonString, index);
+//				throw new RuntimeException(e);
+//			}
+//			if(t.findIdentifyKey() == null){
+//				throw new RuntimeException(String.format("null config key::%s, class:%s", t.findIdentifyKey(), className));
+//			}
+//			if(objList.containsKey(t.findIdentifyKey())){
+//				throw new RuntimeException(String.format("duplicate config key:%s, class:%s", t.findIdentifyKey().toString(), className));
+//			}
+//			objList.put(t.findIdentifyKey(), t);
+//		}
 		return objList;
 	}
 	

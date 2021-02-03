@@ -54,7 +54,7 @@ public class DefaultSocketRouterImpl extends SocketRouter {
 		
 		try {
 			//Object result = method.invoke(handler.getHander(), channel, dataPacket.getValue(), response);
-			Object result = methodAccess.invoke(handler.getHander(),method.getName(), ctx.channel(), dataPacket.getValue(), response);
+			Object result = methodAccess.invoke(handler.getHandler(),method.getName(), ctx.channel(), dataPacket.getValue(), response);
 			ChannelFuture f = ctx.writeAndFlush(response);
 			f.addListener(new ChannelFutureListener() {
 				

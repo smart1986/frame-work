@@ -163,6 +163,7 @@ public class DataConfigImpl implements DataConfig {
 			LOGGER.error(String.format("在 [%s]包下没有扫描到实体类!", dataConfiguration.getPackageScan()));
 			return;
 		}
+
 		AtomicBoolean flag = new AtomicBoolean(true);
 		AtomicBoolean flagException = new AtomicBoolean(false);
 		collection.parallelStream().forEach(clazz1 -> {

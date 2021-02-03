@@ -33,7 +33,7 @@ public abstract class SocketRouter implements Router<BaseDataPacket> {
 	public void register(Object handler) {
 		if (handler != null && handler instanceof RouterHandler) {
 			RouterHandler routerHandler = (RouterHandler) handler;
-			Module m = routerHandler.getHander().getClass().getAnnotation(Module.class);
+			Module m = routerHandler.getHandler().getClass().getAnnotation(Module.class);
 			int module = m.id();
 			if (MODULE_MAPS.containsKey(module)) {
 				throw new RuntimeException(String.format("module:[%d] duplicated key", module));

@@ -56,7 +56,7 @@ public class ForwardSocketRouterImpl extends SocketRouter {
 		
 		try {
 			//Object result = method.invoke(handler.getHander(), channel, dataPacket.getValue(), response);
-			Object result =  methodAccess.invoke(handler.getHander(),method.getName(), ctx.channel(), dataPacket.getValue(), response);
+			Object result =  methodAccess.invoke(handler.getHandler(),method.getName(), ctx.channel(), dataPacket.getValue(), response);
 			remotingCommand.setBody(response.encode());
 			ChannelFuture f = ctx.writeAndFlush(remotingCommand);
 			f.addListener(new ChannelFutureListener() {

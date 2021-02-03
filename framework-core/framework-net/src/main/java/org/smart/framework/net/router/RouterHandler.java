@@ -27,13 +27,13 @@ public class RouterHandler {
 	/**
 	 * 方法映射列表
 	 */
-	private Map<Integer, Method> METHOD_MAPS = new HashMap<>();
+	private Map<Short, Method> METHOD_MAPS = new HashMap<>();
 
 	/**
 	 * 命令映射列表
 	 */
-	private Map<Integer, Cmd> CMD_MAPS = new HashMap<>();
-	private Map<Integer, Object> CMD_PARSE_MAPS = new HashMap<>();
+	private Map<Short, Cmd> CMD_MAPS = new HashMap<>();
+	private Map<Short, Object> CMD_PARSE_MAPS = new HashMap<>();
 	
 	private MethodAccess methodAccess;
 	public RouterHandler(Object hander) {
@@ -63,7 +63,7 @@ public class RouterHandler {
 		return CMD_PARSE_MAPS.get(cmd);
 	}
 	
-	public Object getHander() {
+	public Object getHandler() {
 		return hander;
 	}
 	
@@ -84,8 +84,8 @@ public class RouterHandler {
 				if (METHOD_MAPS.containsKey(c.id())) {
 					throw new RuntimeException(String.format("cmd annontation:[%d] duplicated key, handler:[%s]", c.id(),this.hander.getClass().getName()));
 				}
-				methodNames.add(m.getName());
 				METHOD_MAPS.put(c.id(), m);
+				methodNames.add(m.getName());
 				CMD_MAPS.put(c.id(), c);
 				Module module = this.hander.getClass().getAnnotation(Module.class);
 				Class<?> clazz = c.requstClass();

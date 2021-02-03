@@ -8,7 +8,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @param <T>
  */
 public class TResult<T> {
-	public int statusCode;
+	public short statusCode;
 	public T item;
 	
 	public static <T> TResult<T> sucess(T result) {
@@ -23,7 +23,7 @@ public class TResult<T> {
 		return res;
 	}
 	
-	public static <T> TResult<T> valueOf(int statusCode) {
+	public static <T> TResult<T> valueOf(short statusCode) {
 		TResult<T> result = new TResult<>();
 		result.statusCode = statusCode;
 		return result;

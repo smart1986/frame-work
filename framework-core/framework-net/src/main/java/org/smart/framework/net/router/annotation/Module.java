@@ -12,5 +12,5 @@ public @interface Module {
 	 * 模块映射
 	 * @return
 	 */
-	int id();
+	byte id();
 }
